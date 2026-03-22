@@ -7,7 +7,6 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="gui.MainController">
 
-    <!-- Sidebar -->
     <left>
         <VBox spacing="5" style="-fx-padding: 10; -fx-min-width: 150;">
             <Label text="Menu" style="-fx-font-weight: bold;"/>

@@ -33,8 +33,7 @@ public class DashboardController {
 
     @FXML
     private void handleNewApplication() {
-        // TODO: open a dialog to add a new entry
-        System.out.println("New application clicked");
+        System.out.println("New application alert");
     }
 
     @FXML
