@@ -8,18 +8,15 @@
       fx:controller="gui.DashboardController"
       spacing="10" style="-fx-padding: 15;">
 
-    <!-- Heading row -->
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Label text="Application Dashboard" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
         <Button text="+ New" onAction="#handleNewApplication"/>
     </HBox>
 
-    <!-- Search bar -->
     <TextField fx:id="searchField"
-               promptText="Search by company or role..."
+               promptText="Search"
                onKeyReleased="#handleSearch"/>
 
-    <!-- Applications table -->
     <TableView fx:id="applicationTable" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="colCompany"  text="Company"      prefWidth="160"/>
@@ -28,7 +25,7 @@
             <TableColumn fx:id="colDeadline" text="Deadline"     prefWidth="120"/>
         </columns>
         <placeholder>
-            <Label text="No applications yet. Click '+ New' to add one."/>
+            <Label text="No applications yet."/>
         </placeholder>
     </TableView>
 

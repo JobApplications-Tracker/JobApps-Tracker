@@ -24,9 +24,37 @@ public class MainController {
         showDashboard();
     }
 
+    /**
+     * Loads the dashboard view and injects a callback so the dashboard's
+     * "New Application" button can navigate to the form.
+     */
     @FXML
-    private void showDashboard() {
-        loadView("/view/DashboardView.fxml");
+    void showDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DashboardView.fxml"));
+            Node view = loader.load();
+            DashboardController controller = loader.getController();
+            controller.setOnNewApplication(this::showNewApplication);
+            contentArea.getChildren().setAll(view);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load view: /view/DashboardView.fxml", e);
+        }
+    }
+
+    /**
+     * Loads the new application form and injects a callback to return
+     * to the dashboard on save or cancel.
+     */
+    private void showNewApplication() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/NewApplicationView.fxml"));
+            Node view = loader.load();
+            NewApplicationController controller = loader.getController();
+            controller.setOnSuccess(this::showDashboard);
+            contentArea.getChildren().setAll(view);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load view: /view/NewApplicationView.fxml", e);
+        }
     }
 
     @FXML

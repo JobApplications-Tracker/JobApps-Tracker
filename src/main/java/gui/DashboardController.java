@@ -1,11 +1,15 @@
 package gui;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import logic.Application;
+import logic.ApplicationController;
+import storage.FileStorage;
 
 /**
  * Controls the dashboard view of the application.
@@ -14,15 +18,25 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class DashboardController {
 
     @FXML private TextField searchField;
-    @FXML private TableView<ApplicationEntry> applicationTable;
-    @FXML private TableColumn<ApplicationEntry, String> colCompany;
-    @FXML private TableColumn<ApplicationEntry, String> colRole;
-    @FXML private TableColumn<ApplicationEntry, String> colStatus;
-    @FXML private TableColumn<ApplicationEntry, String> colDeadline;
+    @FXML private TableView<Application> applicationTable;
+    @FXML private TableColumn<Application, String> colCompany;
+    @FXML private TableColumn<Application, String> colRole;
+    @FXML private TableColumn<Application, String> colStatus;
+    @FXML private TableColumn<Application, String> colDeadline;
 
-    private final ObservableList<ApplicationEntry> masterList =
+    private final ObservableList<Application> masterList =
             FXCollections.observableArrayList();
-    private FilteredList<ApplicationEntry> filteredList;
+    private FilteredList<Application> filteredList;
+
+    private final ApplicationController appController =
+            new ApplicationController(new FileStorage());
+
+    /** Injected by MainController — navigates to the new application form. */
+    private Runnable onNewApplication;
+
+    public void setOnNewApplication(Runnable onNewApplication) {
+        this.onNewApplication = onNewApplication;
+    }
 
     /**
      * Initializes the dashboard after the FXML has been loaded.
@@ -32,16 +46,27 @@ public class DashboardController {
     public void initialize() {
         colCompany.setCellValueFactory(new PropertyValueFactory<>("companyName"));
         colRole.setCellValueFactory(new PropertyValueFactory<>("roleTitle"));
-        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        colDeadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
+
+        // status is an enum — convert to string
+        colStatus.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getStatus().name()));
+
+        // deadline is a LocalDate — handle null
+        colDeadline.setCellValueFactory(cellData -> {
+            var deadline = cellData.getValue().getDeadline();
+            return new SimpleStringProperty(deadline != null ? deadline.toString() : "—");
+        });
 
         filteredList = new FilteredList<>(masterList, p -> true);
         applicationTable.setItems(filteredList);
+
+        // Load real data from storage
+        masterList.setAll(appController.getAllApplications());
     }
 
     @FXML
     private void handleNewApplication() {
-        System.out.println("New application alert");
+        if (onNewApplication != null) onNewApplication.run();
     }
 
     /**
