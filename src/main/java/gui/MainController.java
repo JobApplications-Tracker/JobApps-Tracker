@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import logic.ApplicationController;
+import logic.InterviewController;
 import logic.ReminderService;
 import storage.FileStorage;
 
@@ -15,8 +16,8 @@ import java.util.List;
 /**
  * Controls the main window of the application.
  * Handles navigation between views and highlights the active sidebar button.
- * Owns the single instances of FileStorage, ApplicationController, and ReminderService
- * that are injected into all child controllers.
+ * Owns the single instances of FileStorage, ApplicationController, InterviewController,
+ * and ReminderService that are injected into all child controllers.
  */
 public class MainController {
 
@@ -29,6 +30,7 @@ public class MainController {
 
     private final FileStorage fileStorage = new FileStorage();
     private final ApplicationController appController = new ApplicationController(fileStorage);
+    private final InterviewController interviewController = new InterviewController(fileStorage);
     private final ReminderService reminderService = new ReminderService(fileStorage);
 
     /**
@@ -91,8 +93,8 @@ public class MainController {
             Node view = loader.load();
             CalendarController controller = loader.getController();
             controller.setAppController(appController);
+            controller.setInterviewController(interviewController);
             controller.setReminderService(reminderService);
-            controller.setFileStorage(fileStorage);
             controller.loadData();
             contentArea.getChildren().setAll(view);
         } catch (IOException e) {

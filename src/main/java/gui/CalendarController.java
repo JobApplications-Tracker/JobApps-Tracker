@@ -6,8 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import logic.ApplicationController;
+import logic.InterviewController;
 import logic.ReminderService;
-import storage.FileStorage;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -32,8 +32,8 @@ public class CalendarController {
     private YearMonth currentMonth;
 
     private ApplicationController appController;
+    private InterviewController interviewController;
     private ReminderService reminderService;
-    private FileStorage fileStorage;
 
     /** Maps each date to a list of event badges to render in the calendar cell. */
     private Map<LocalDate, List<CalendarEventBadge>> eventMap;
@@ -49,6 +49,16 @@ public class CalendarController {
     }
 
     /**
+     * Sets the InterviewController used to load interview dates.
+     * Must be called by MainController before the view is displayed.
+     *
+     * @param interviewController The interview controller to use.
+     */
+    public void setInterviewController(InterviewController interviewController) {
+        this.interviewController = interviewController;
+    }
+
+    /**
      * Sets the ReminderService used to load upcoming reminders.
      * Must be called by MainController before the view is displayed.
      *
@@ -56,16 +66,6 @@ public class CalendarController {
      */
     public void setReminderService(ReminderService reminderService) {
         this.reminderService = reminderService;
-    }
-
-    /**
-     * Sets the FileStorage used to load interview data.
-     * Must be called by MainController before the view is displayed.
-     *
-     * @param fileStorage The file storage instance to use.
-     */
-    public void setFileStorage(FileStorage fileStorage) {
-        this.fileStorage = fileStorage;
     }
 
     /**
@@ -113,7 +113,7 @@ public class CalendarController {
                         logic.Application::getCompanyName,
                         (a, b) -> a));
 
-        fileStorage.loadAllInterviews().forEach(i -> {
+        interviewController.getAllInterviews().forEach(i -> {
             String company = appIdToCompany.getOrDefault(i.getApplicationId(), "Interview");
             addEvent(i.getDate().toLocalDate(), "R" + i.getRound() + ": " + company, "#60a5fa");
         });
