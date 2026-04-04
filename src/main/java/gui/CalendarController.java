@@ -26,6 +26,16 @@ import java.util.stream.Collectors;
  */
 public class CalendarController {
 
+    private static final String BADGE_DEADLINE  = "badge-deadline";
+    private static final String BADGE_INTERVIEW = "badge-interview";
+    private static final String BADGE_REMINDER  = "badge-reminder";
+
+    private static final int BADGE_TRUNCATE_LENGTH = 15;
+    private static final int CALENDAR_ROWS         = 6;
+    private static final int CALENDAR_COLS         = 7;
+    private static final int CELL_MIN_HEIGHT       = 90;
+    private static final int REMINDER_LOOK_AHEAD   = 365;
+
     @FXML private Label monthYearLabel;
     @FXML private GridPane calendarGrid;
 
@@ -101,28 +111,29 @@ public class CalendarController {
     private void loadEvents() {
         eventMap = new HashMap<>();
 
-        // Deadlines
+        // Deadlines — sourced from all applications that have a deadline set
         appController.getAllApplications().stream()
                 .filter(a -> a.getDeadline() != null)
                 .forEach(a -> addEvent(a.getDeadline(),
-                        a.getCompanyName() + " deadline", "badge-deadline"));
+                        a.getCompanyName() + " deadline", BADGE_DEADLINE));
 
-        // Interviews
+        // Build a lookup map from application ID to company name for interview labelling
         Map<String, String> appIdToCompany = appController.getAllApplications().stream()
                 .collect(Collectors.toMap(
                         logic.Application::getId,
                         logic.Application::getCompanyName,
                         (a, b) -> a));
 
+        // Interviews — accessed through InterviewController to respect the logic layer
         interviewController.getAllInterviews().forEach(i -> {
             String company = appIdToCompany.getOrDefault(i.getApplicationId(), "Interview");
             addEvent(i.getDate().toLocalDate(),
-                    "R" + i.getRound() + ": " + company, "badge-interview");
+                    "R" + i.getRound() + ": " + company, BADGE_INTERVIEW);
         });
 
-        // Reminders
-        reminderService.getUpcomingReminders(365).forEach(r ->
-                addEvent(r.getTriggerDate(), r.getType().name(), "badge-reminder"));
+        // Reminders — only those falling within the look-ahead window
+        reminderService.getUpcomingReminders(REMINDER_LOOK_AHEAD).forEach(r ->
+                addEvent(r.getTriggerDate(), r.getType().name(), BADGE_REMINDER));
     }
 
     private void addEvent(LocalDate date, String label, String styleClass) {
@@ -137,18 +148,19 @@ public class CalendarController {
 
         calendarGrid.getChildren().clear();
 
-        int startOffset = currentMonth.atDay(1).getDayOfWeek().getValue() % 7;
+        // Offset so the first day of the month lands on the correct column (Sunday = 0)
+        int startOffset = currentMonth.atDay(1).getDayOfWeek().getValue() % CALENDAR_COLS;
         int daysInMonth = currentMonth.lengthOfMonth();
         LocalDate today = LocalDate.now();
 
         int day = 1;
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 7; col++) {
+        for (int row = 0; row < CALENDAR_ROWS; row++) {
+            for (int col = 0; col < CALENDAR_COLS; col++) {
                 VBox cell = new VBox(2);
                 cell.setPadding(new Insets(4));
-                cell.setMinHeight(90);
+                cell.setMinHeight(CELL_MIN_HEIGHT);
 
-                int cellIndex = row * 7 + col;
+                int cellIndex = row * CALENDAR_COLS + col;
                 boolean inMonth = cellIndex >= startOffset && day <= daysInMonth;
 
                 if (inMonth) {
@@ -167,8 +179,9 @@ public class CalendarController {
                     }
                     cell.getChildren().add(dayLabel);
 
+                    // Render one badge label per event on this date
                     for (CalendarEventBadge event : eventMap.getOrDefault(cellDate, Collections.emptyList())) {
-                        Label badge = new Label(truncate(event.label(), 15));
+                        Label badge = new Label(truncate(event.label(), BADGE_TRUNCATE_LENGTH));
                         badge.setMaxWidth(Double.MAX_VALUE);
                         badge.setPadding(new Insets(1, 4, 1, 4));
                         badge.getStyleClass().add(event.styleClass());

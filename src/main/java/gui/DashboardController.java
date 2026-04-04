@@ -20,6 +20,7 @@ import logic.Application;
 import logic.ApplicationController;
 import logic.ApplicationStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -27,6 +28,11 @@ import java.util.List;
  * Populates stat cards, bar chart, pie chart, and the application table.
  */
 public class DashboardController {
+
+    private static final String STYLE_STATUS_OFFER        = "status-offer";
+    private static final String STYLE_STATUS_INTERVIEWING = "status-interviewing";
+    private static final String STYLE_STATUS_REJECTED     = "status-rejected";
+    private static final String STYLE_STATUS_DEFAULT      = "status-default";
 
     @FXML private Label statTotal;
     @FXML private Label statApplied;
@@ -96,7 +102,7 @@ public class DashboardController {
         colStatus.setCellValueFactory(c ->
                 new SimpleStringProperty(c.getValue().getStatus().name()));
         colDeadline.setCellValueFactory(c -> {
-            var d = c.getValue().getDeadline();
+            LocalDate d = c.getValue().getDeadline();
             return new SimpleStringProperty(d != null ? d.toString() : "—");
         });
 
@@ -104,20 +110,20 @@ public class DashboardController {
             @Override
             protected void updateItem(String value, boolean empty) {
                 super.updateItem(value, empty);
-                getStyleClass().removeAll("status-offer", "status-interviewing",
-                        "status-rejected", "status-default");
+                getStyleClass().removeAll(STYLE_STATUS_OFFER, STYLE_STATUS_INTERVIEWING,
+                        STYLE_STATUS_REJECTED, STYLE_STATUS_DEFAULT);
                 if (empty || value == null) {
                     setText(null);
                 } else {
                     setText(value);
-                    if (value.equals("OFFER")) {
-                        getStyleClass().add("status-offer");
-                    } else if (value.equals("INTERVIEWING")) {
-                        getStyleClass().add("status-interviewing");
-                    } else if (value.equals("REJECTED")) {
-                        getStyleClass().add("status-rejected");
+                    if (value.equals(ApplicationStatus.OFFER.name())) {
+                        getStyleClass().add(STYLE_STATUS_OFFER);
+                    } else if (value.equals(ApplicationStatus.INTERVIEWING.name())) {
+                        getStyleClass().add(STYLE_STATUS_INTERVIEWING);
+                    } else if (value.equals(ApplicationStatus.REJECTED.name())) {
+                        getStyleClass().add(STYLE_STATUS_REJECTED);
                     } else {
-                        getStyleClass().add("status-default");
+                        getStyleClass().add(STYLE_STATUS_DEFAULT);
                     }
                 }
             }

@@ -15,6 +15,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import logic.Application;
 import logic.ApplicationController;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
  * Lets users select applications via checkboxes and compare them side by side.
  */
 public class CompareController {
+
+    private static final String STYLE_ROW_BEST_PAY = "row-best-pay";
 
     @FXML private ListView<Application> appListView;
     @FXML private TableView<Application> compareTable;
@@ -87,15 +90,16 @@ public class CompareController {
         colStatus.setCellValueFactory(c ->
                 new SimpleStringProperty(c.getValue().getStatus().name()));
         colDeadline.setCellValueFactory(c -> {
-            var d = c.getValue().getDeadline();
+            LocalDate d = c.getValue().getDeadline();
             return new SimpleStringProperty(d != null ? d.toString() : "—");
         });
 
+        // Highlight the row with the highest pay among selected applications
         compareTable.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(Application app, boolean empty) {
                 super.updateItem(app, empty);
-                getStyleClass().remove("row-best-pay");
+                getStyleClass().remove(STYLE_ROW_BEST_PAY);
                 if (!empty && app != null) {
                     boolean isTop = !selectedApps.isEmpty()
                             && selectedApps.stream()
@@ -104,7 +108,7 @@ public class CompareController {
                             .isPresent()
                             && app.getPay() > 0;
                     if (isTop) {
-                        getStyleClass().add("row-best-pay");
+                        getStyleClass().add(STYLE_ROW_BEST_PAY);
                     }
                 }
             }

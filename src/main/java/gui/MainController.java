@@ -21,6 +21,11 @@ import java.util.List;
  */
 public class MainController {
 
+    private static final String FXML_DASHBOARD       = "/view/DashboardView.fxml";
+    private static final String FXML_CALENDAR        = "/view/CalendarView.fxml";
+    private static final String FXML_COMPARE         = "/view/CompareView.fxml";
+    private static final String FXML_NEW_APPLICATION = "/view/NewApplicationView.fxml";
+
     @FXML private StackPane contentArea;
     @FXML private Button btnDashboard;
     @FXML private Button btnCalendar;
@@ -60,7 +65,7 @@ public class MainController {
     public void showDashboard() {
         setActive(btnDashboard);
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DashboardView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_DASHBOARD));
             Node view = loader.load();
             DashboardController controller = loader.getController();
             controller.setAppController(appController);
@@ -68,20 +73,20 @@ public class MainController {
             controller.loadData();
             contentArea.getChildren().setAll(view);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load view: /view/DashboardView.fxml", e);
+            throw new RuntimeException("Failed to load view: " + FXML_DASHBOARD, e);
         }
     }
 
     private void showNewApplication() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/NewApplicationView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_NEW_APPLICATION));
             Node view = loader.load();
             NewApplicationController controller = loader.getController();
             controller.setAppController(appController);
             controller.setOnSuccess(this::showDashboard);
             contentArea.getChildren().setAll(view);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load view: /view/NewApplicationView.fxml", e);
+            throw new RuntimeException("Failed to load view: " + FXML_NEW_APPLICATION, e);
         }
     }
 
@@ -89,7 +94,7 @@ public class MainController {
     private void showCalendar() {
         setActive(btnCalendar);
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CalendarView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_CALENDAR));
             Node view = loader.load();
             CalendarController controller = loader.getController();
             controller.setAppController(appController);
@@ -98,7 +103,7 @@ public class MainController {
             controller.loadData();
             contentArea.getChildren().setAll(view);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load view: /view/CalendarView.fxml", e);
+            throw new RuntimeException("Failed to load view: " + FXML_CALENDAR, e);
         }
     }
 
@@ -106,14 +111,14 @@ public class MainController {
     private void showCompare() {
         setActive(btnCompare);
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CompareView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_COMPARE));
             Node view = loader.load();
             CompareController controller = loader.getController();
             controller.setAppController(appController);
             controller.loadData();
             contentArea.getChildren().setAll(view);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load view: /view/CompareView.fxml", e);
+            throw new RuntimeException("Failed to load view: " + FXML_COMPARE, e);
         }
     }
 }
