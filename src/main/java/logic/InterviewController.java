@@ -19,6 +19,15 @@ public class InterviewController {
         return interview;
     }
 
+    /**
+     * Returns all interviews across all applications.
+     *
+     * @return List of all stored interviews.
+     */
+    public List<Interview> getAllInterviews() {
+        return storage.loadAllInterviews();
+    }
+
     public List<Interview> getInterviewsByApplication(String applicationId) {
         return storage.loadAllInterviews().stream()
                 .filter(i -> i.getApplicationId().equals(applicationId))
