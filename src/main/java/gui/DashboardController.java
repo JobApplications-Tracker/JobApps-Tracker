@@ -5,14 +5,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.*;
-import javafx.scene.control.*;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import logic.Application;
 import logic.ApplicationController;
 import logic.ApplicationStatus;
-import storage.FileStorage;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -20,6 +28,11 @@ import java.util.List;
  * Populates stat cards, bar chart, pie chart, and the application table.
  */
 public class DashboardController {
+
+    private static final String STYLE_STATUS_OFFER        = "status-offer";
+    private static final String STYLE_STATUS_INTERVIEWING = "status-interviewing";
+    private static final String STYLE_STATUS_REJECTED     = "status-rejected";
+    private static final String STYLE_STATUS_DEFAULT      = "status-default";
 
     @FXML private Label statTotal;
     @FXML private Label statApplied;
@@ -40,22 +53,65 @@ public class DashboardController {
     private final ObservableList<Application> masterList = FXCollections.observableArrayList();
     private FilteredList<Application> filteredList;
 
-    private final ApplicationController appController =
-            new ApplicationController(new FileStorage());
-
+    private ApplicationController appController;
     private Runnable onNewApplication;
 
+    /**
+     * Sets the ApplicationController used to load and manage applications.
+     * Must be called by MainController before the view is displayed.
+     *
+     * @param appController The application controller to use.
+     */
+    public void setAppController(ApplicationController appController) {
+        this.appController = appController;
+    }
+
+    /**
+     * Registers a callback invoked when the user requests to add a new application.
+     * Typically set by {@link MainController} after loading this view.
+     *
+     * @param onNewApplication Runnable to execute when the new-application button is clicked.
+     */
     public void setOnNewApplication(Runnable onNewApplication) {
         this.onNewApplication = onNewApplication;
     }
 
+    /**
+     * Initialises the controller after the FXML has been loaded.
+     * Configures the table columns and search filter.
+     */
     @FXML
     public void initialize() {
         setupTable();
+    }
+
+    /**
+     * Loads and displays application data after dependencies have been injected.
+     * Called by MainController immediately after setAppController.
+     */
+    public void loadData() {
         List<Application> apps = appController.getAllApplications();
         masterList.setAll(apps);
         populateStats(apps);
         populateCharts(apps);
+    }
+
+    /**
+     * Returns whether the given application matches the search keyword.
+     * Matches against company name and role title, case-insensitively.
+     * Package-private to allow direct invocation from tests without requiring JavaFX.
+     *
+     * @param app     The application to test.
+     * @param keyword The search keyword, already trimmed and lowercased.
+     * @return True if the application matches or keyword is empty, false otherwise.
+     */
+    boolean matchesSearch(Application app, String keyword) {
+        if (keyword.isEmpty()) {
+            return true;
+        }
+        String lowerKeyword = keyword.toLowerCase();
+        return app.getCompanyName().toLowerCase().contains(lowerKeyword)
+                || app.getRoleTitle().toLowerCase().contains(lowerKeyword);
     }
 
     private void setupTable() {
@@ -64,7 +120,7 @@ public class DashboardController {
         colStatus.setCellValueFactory(c ->
                 new SimpleStringProperty(c.getValue().getStatus().name()));
         colDeadline.setCellValueFactory(c -> {
-            var d = c.getValue().getDeadline();
+            LocalDate d = c.getValue().getDeadline();
             return new SimpleStringProperty(d != null ? d.toString() : "—");
         });
 
@@ -72,19 +128,20 @@ public class DashboardController {
             @Override
             protected void updateItem(String value, boolean empty) {
                 super.updateItem(value, empty);
+                getStyleClass().removeAll(STYLE_STATUS_OFFER, STYLE_STATUS_INTERVIEWING,
+                        STYLE_STATUS_REJECTED, STYLE_STATUS_DEFAULT);
                 if (empty || value == null) {
                     setText(null);
-                    setStyle("");
                 } else {
                     setText(value);
-                    if (value.equals("OFFERED")) {
-                        setStyle("-fx-text-fill: #f97316; -fx-font-weight: bold;");
-                    } else if (value.equals("INTERVIEWING")) {
-                        setStyle("-fx-text-fill: #dd6b20;");
-                    } else if (value.equals("REJECTED")) {
-                        setStyle("-fx-text-fill: #f87171;");
+                    if (value.equals(ApplicationStatus.OFFER.name())) {
+                        getStyleClass().add(STYLE_STATUS_OFFER);
+                    } else if (value.equals(ApplicationStatus.INTERVIEWING.name())) {
+                        getStyleClass().add(STYLE_STATUS_INTERVIEWING);
+                    } else if (value.equals(ApplicationStatus.REJECTED.name())) {
+                        getStyleClass().add(STYLE_STATUS_REJECTED);
                     } else {
-                        setStyle("-fx-text-fill: #d1d5db;");
+                        getStyleClass().add(STYLE_STATUS_DEFAULT);
                     }
                 }
             }
@@ -105,7 +162,6 @@ public class DashboardController {
         statRejected.setText(String.valueOf(
                 apps.stream().filter(a -> a.getStatus() == ApplicationStatus.REJECTED).count()));
     }
-
 
     private void populateCharts(List<Application> apps) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -131,15 +187,14 @@ public class DashboardController {
 
     @FXML
     private void handleNewApplication() {
-        if (onNewApplication != null) onNewApplication.run();
+        if (onNewApplication != null) {
+            onNewApplication.run();
+        }
     }
 
     @FXML
     private void handleSearch() {
         String keyword = searchField.getText().toLowerCase().trim();
-        filteredList.setPredicate(entry ->
-                keyword.isEmpty()
-                        || entry.getCompanyName().toLowerCase().contains(keyword)
-                        || entry.getRoleTitle().toLowerCase().contains(keyword));
+        filteredList.setPredicate(entry -> matchesSearch(entry, keyword));
     }
 }
