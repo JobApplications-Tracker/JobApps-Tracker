@@ -13,6 +13,13 @@ import logic.ApplicationStatus;
  */
 public class NewApplicationController {
 
+    /** Statuses valid for a newly created application. Terminal and intermediate
+     *  statuses (OFFER, REJECTED, ACCEPTED, WITHDRAWN) are excluded. */
+    private static final ApplicationStatus[] INITIAL_STATUSES = {
+            ApplicationStatus.APPLIED,
+            ApplicationStatus.INTERVIEWING
+    };
+
     @FXML private TextField companyField;
     @FXML private TextField roleField;
     @FXML private ChoiceBox<ApplicationStatus> statusChoice;
@@ -47,11 +54,13 @@ public class NewApplicationController {
 
     /**
      * Initialises the form after the FXML has been loaded.
-     * Populates the status dropdown and sets the default value.
+     * Populates the status dropdown with only valid initial statuses and sets
+     * the default value to APPLIED. Terminal and intermediate statuses such as
+     * OFFER, REJECTED, ACCEPTED, and WITHDRAWN are excluded.
      */
     @FXML
     public void initialize() {
-        statusChoice.getItems().setAll(ApplicationStatus.values());
+        statusChoice.getItems().setAll(INITIAL_STATUSES);
         statusChoice.setValue(ApplicationStatus.APPLIED);
         errorLabel.setText("");
     }
