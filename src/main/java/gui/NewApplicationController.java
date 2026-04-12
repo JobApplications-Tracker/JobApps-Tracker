@@ -82,6 +82,7 @@ public class NewApplicationController {
     /**
      * Validates required fields and saves the new application via ApplicationController.
      * Deadline and notes can be set later via an edit screen.
+     * Displays an error dialog if the logic layer rejects the input.
      */
     @FXML
     private void handleSubmit() {
@@ -107,7 +108,13 @@ public class NewApplicationController {
         }
 
         String location = locationField.getText().trim();
-        appController.addApplication(company, role, pay, location, status);
+
+        try {
+            appController.addApplication(company, role, pay, location, status);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            GuiUtils.showError("Could Not Save Application", e.getMessage());
+            return;
+        }
 
         if (onSuccess != null) {
             onSuccess.run();
