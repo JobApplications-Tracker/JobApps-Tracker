@@ -1,6 +1,6 @@
 # JobApps Tracker — User Guide
 
-![Screenshot of application](images/Ui.png)
+![Screenshot of application](images/userGuide/Ui.png)
 
 JobApps Tracker is a desktop application for managing and tracking your internship and job applications in one place. Track statuses, set deadlines, schedule interviews, compare opportunities side by side, and review your progress on an interactive calendar without relying on external services.
 
@@ -46,7 +46,7 @@ java -jar jobapps-tracker.jar
 ### Adding a New Application
 
 1. From the **Dashboard**, click the **+ New Application** button in the top right.
-   ![Screenshot](images/new_application_button.png)
+   ![Screenshot](images/userGuide/new_application_button.png)
 2. Fill in the required fields:
     - **Company** *(required)* — e.g. `Google`
     - **Role** *(required)* — e.g. `Software Engineer Intern`
@@ -55,11 +55,11 @@ java -jar jobapps-tracker.jar
     - **Pay** — e.g. `9000` (numeric only)
     - **Location** — e.g. `Singapore`
 4. Click **Save Application**.
-   ![Screenshot](images/save_application.png)
+   ![Screenshot](images/userGuide/save_application.png)
 
    If any required field is left empty, an error message will appear below the form. If Pay is filled with a non-numeric value, you will see **"Pay must be a valid number."**
-   ![Screenshot](images/new_app_error.png)
-   ![Screenshot](images/pay_error.png)
+   ![Screenshot](images/userGuide/new_app_error.png)
+   ![Screenshot](images/userGuide/pay_error.png)
 5. Click **Cancel** at any time to return to the Dashboard without saving.
 
 ---
@@ -68,7 +68,7 @@ java -jar jobapps-tracker.jar
 
 1. From the Dashboard table, locate the application you want to edit.
 2. Click the **Edit** button on that row, or **double-click** the row directly.
-   ![Screenshot](images/edit_button.png)
+   ![Screenshot](images/userGuide/edit_button.png)
 3. The edit form will open pre-filled with the application's current values.
 4. Update any of the following fields:
     - **Company**, **Role**, **Pay**, **Location** — in the *Application Details* card
@@ -78,7 +78,7 @@ java -jar jobapps-tracker.jar
 5. Click **Save Changes**. A confirmation message will appear inline:
     - **"Changes saved successfully."** — at least one field was updated.
     - **"No changes to save."** — no fields were modified.
-      ![Screenshot](images/edit_feedback.png)
+      ![Screenshot](images/userGuide/edit_feedback.png)
 
 6. Click **Back to Dashboard** at any time to return without saving the current edits.
 
@@ -91,7 +91,7 @@ java -jar jobapps-tracker.jar
 1. Open the edit form for the application you want to remove (see [Editing an Application](#editing-an-application)).
 2. Click **Delete Application** at the bottom right of the form.
 3. A confirmation dialog will appear asking you to confirm the deletion.
-   ![Screenshot](images/delete_confirm.png)
+   ![Screenshot](images/userGuide/delete_confirm.png)
 4. Click **OK** to permanently delete the application, or **Cancel** to go back.
 
 > ⚠️ Deletion is permanent. Associated interviews and reminders stored for that application will remain in storage but will no longer be linked to an active record.
@@ -104,7 +104,7 @@ From the Dashboard, use the **search bar** above the application table to filter
 
 - Searches match against **company name** and **role title**, case-insensitively.
 - The table updates as you type with no need to press Enter.
-  ![Screenshot](images/search.png)
+  ![Screenshot](images/userGuide/search.png)
 
 ---
 
@@ -115,7 +115,7 @@ From the Dashboard, use the **search bar** above the application table to filter
     - Hold **Ctrl** (Windows/Linux) or **Cmd** (macOS) and click to select multiple applications.
 3. The **Comparison** table on the right updates automatically, showing the selected applications sorted by pay (highest first).
 4. The row with the **highest pay** is highlighted in green.
-   ![Screenshot](images/compare_highlight.png)
+   ![Screenshot](images/userGuide/compare_highlight.png)
 
 ---
 
@@ -123,7 +123,7 @@ From the Dashboard, use the **search bar** above the application table to filter
 
 1. Click **Calendar** in the left sidebar.
 2. The calendar displays the current month. Use the **◀** and **▶** arrows to navigate between months.
-   ![Screenshot](images/calendar_nav.png)
+   ![Screenshot](images/userGuide/calendar_nav.png)
 
 > The calendar is view-only. To add or modify deadlines, interviews, or reminders, use the edit form on the Dashboard.
 

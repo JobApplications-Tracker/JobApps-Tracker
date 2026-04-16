@@ -8,24 +8,25 @@ This section covers the technical documentation of JobApps Tracker.
 2. [Class Diagram](#class-diagram)
 3. [Implementation](#implementation)
    1. [Entry Point](#entry-point)
-   2. [GUI Layer](#gui-layer)
+   2. [Activity Diagram](#activity-diagram)
+   3. [GUI Layer](#gui-layer)
       1. [MainController](#maincontroller)
       2. [DashboardController](#dashboardcontroller)
          1. [Feature: Viewing Applications](#feature-viewing-applications)
-         2. [Feature: Searching Applications](#feature-searching-applications)
       3. [EditApplicationController](#editapplicationcontroller)
          1. [Feature: Editing an Application](#feature-editing-an-application)
+         2. [Feature: Invalid Status Transition](#feature-invalid-status-transition)
       4. [NewApplicationController](#newapplicationcontroller)
          1. [Feature: Adding an Application](#feature-adding-an-application)
       5. [CompareController](#comparecontroller)
          1. [Feature: Comparing Applications](#feature-comparing-applications)
       6. [CalendarController](#calendarcontroller)
-         1. [Feature: Calendar View](#feature-calendar-view)
-   3. [Logic Layer](#logic-layer)
+   4. [Logic Layer](#logic-layer)
       1. [ApplicationController](#applicationcontroller)
       2. [InterviewController](#interviewcontroller)
+         1. [Feature: Adding an Interview](#feature-adding-an-interview)
       3. [ReminderService](#reminderservice)
-   4. [Storage Layer](#storage-layer)
+   5. [Storage Layer](#storage-layer)
       1. [FileStorage](#filestorage)
 4. [Testing](#testing)
 
@@ -47,7 +48,7 @@ JavaFX version: **21**
 
 The architecture of the app follows a strict **3-Tier Layered Architecture** to ensure separation of concerns. The GUI layer strictly consumes the Logic layer's API and never interacts directly with the Storage layer.
 
-![Solution Architecture](./developer_guide/SolutionArchitecture.png)
+![Solution Architecture](images/sequenceDiagrams/System%20Architecture%20Diagram.png)
 
 The internal workings of the application can be summarised into three layers:
 
@@ -61,7 +62,7 @@ The internal workings of the application can be summarised into three layers:
 
 The full class diagram is shown below. The entry point `Launcher` is omitted as it does not affect the internal functionality of the application.
 
-![Full Class Diagram](./developer_guide/ClassDiagram.png)
+![Full Class Diagram](images/classDiagrams/ClassDiagram.png)
 
 ---
 
@@ -70,6 +71,14 @@ The full class diagram is shown below. The entry point `Launcher` is omitted as 
 ### Entry Point
 
 The entry point of the application is `Launcher`, which delegates to `Main` to initialise the JavaFX runtime and load `MainWindow.fxml`. `MainController` is then responsible for all subsequent navigation.
+
+---
+
+### Activity Diagram
+
+The activity diagram below shows the main user workflow through the application, covering all major actions: adding, editing, deleting, searching, comparing, and browsing the calendar.
+
+![Activity Diagram](images/sequenceDiagrams/Activity%20Diagram.png)
 
 ---
 
@@ -91,15 +100,7 @@ The sequence diagram below visualises the interactions when the dashboard loads.
 
 Precondition: The application has launched and `MainController` has initialised all dependencies.
 
-![Load Dashboard Sequence Diagram](./developer_guide/SequenceDiagram-LoadDashboard.png)
-
-##### Feature: Searching Applications
-
-The sequence diagram below visualises the interactions when the user types in the search field.
-
-Precondition: The dashboard is loaded with at least one application.
-
-![Dashboard Search Sequence Diagram](./developer_guide/SequenceDiagram-DashboardSearch.png)
+![Load Dashboard Sequence Diagram](images/sequenceDiagrams/SequenceDiagram-LoadDashboard.png)
 
 ---
 
@@ -113,7 +114,15 @@ The sequence diagram below visualises the interactions when the user saves chang
 
 Precondition: The user has navigated to the edit form for an existing application.
 
-![Edit Application Sequence Diagram](./developer_guide/SequenceDiagram-EditApplication.png)
+![Edit Application Sequence Diagram](images/sequenceDiagrams/SequenceDiagram-EditApplication.png)
+
+##### Feature: Invalid Status Transition
+
+The sequence diagram below visualises the interactions when the user attempts a status transition that violates the business rules, such as modifying a terminal-state application or skipping the `INTERVIEWING` stage.
+
+Precondition: The user is on the edit form and attempts to change the status to an invalid target.
+
+![Invalid Status Transition Sequence Diagram](images/sequenceDiagrams/SequenceDiagram-InvalidStatusTransition.png)
 
 ---
 
@@ -127,7 +136,7 @@ The sequence diagram below visualises the interactions when a new application is
 
 Precondition: The user has filled in at least the required fields (company, role, status).
 
-![Add New Application Sequence Diagram](./developer_guide/SequenceDiagram-AddNewApplication.png)
+![Add New Application Sequence Diagram](images/sequenceDiagrams/SequenceDiagram-AddNewApplication.png)
 
 ---
 
@@ -141,21 +150,13 @@ The sequence diagram below visualises the interactions when the user selects app
 
 Precondition: At least one application exists in storage.
 
-![Compare Applications Sequence Diagram](./developer_guide/SequenceDiagram-CompareApplications.png)
+![Compare Applications Sequence Diagram](images/sequenceDiagrams/SequenceDiagram-CompareApplications.png)
 
 ---
 
 #### CalendarController
 
-`CalendarController` manages the monthly calendar grid, aggregating deadlines, interviews, and reminders from all three logic controllers.
-
-##### Feature: Calendar View
-
-The sequence diagram below visualises the interactions when the calendar loads its events.
-
-Precondition: The user has navigated to the calendar view.
-
-![Calendar Load Events Sequence Diagram](./developer_guide/SequenceDiagram-CalendarLoadEvents.png)
+`CalendarController` manages the monthly calendar grid, aggregating deadlines, interviews, and reminders from all three logic controllers and rendering them as colour-coded badges within each day cell.
 
 ---
 
@@ -163,11 +164,7 @@ Precondition: The user has navigated to the calendar view.
 
 #### ApplicationController
 
-`ApplicationController` handles all CRUD operations for `Application` records. It enforces the status transition rules described in the state diagram below and validates input before delegating to storage.
-
-**Status State Diagram:**
-
-![State Diagram](./developer_guide/StateDiagram.png)
+`ApplicationController` handles all CRUD operations for `Application` records. It enforces the status transition rules described below and validates input before delegating to storage.
 
 Terminal states (`REJECTED`, `ACCEPTED`, `WITHDRAWN`) cannot be transitioned out of. Jumping directly from `APPLIED` to `OFFER` is also prohibited.
 
@@ -176,6 +173,14 @@ Terminal states (`REJECTED`, `ACCEPTED`, `WITHDRAWN`) cannot be transitioned out
 #### InterviewController
 
 `InterviewController` handles creation and retrieval of `Interview` records. It enforces referential integrity by verifying the parent application exists before saving.
+
+##### Feature: Adding an Interview
+
+The sequence diagram below visualises the interactions when a new interview is added, including the referential integrity check against the parent application.
+
+Precondition: At least one application exists in storage.
+
+![Add Interview Sequence Diagram](images/sequenceDiagrams/SequenceDiagram-AddInterview.png)
 
 ---
 
