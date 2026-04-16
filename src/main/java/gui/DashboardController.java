@@ -33,14 +33,14 @@ import java.util.function.Consumer;
  */
 public class DashboardController {
 
-    private static final String STYLE_STATUS_PILL          = "status-pill";
-    private static final String STYLE_STATUS_APPLIED       = "status-applied";
-    private static final String STYLE_STATUS_INTERVIEWING  = "status-interviewing";
-    private static final String STYLE_STATUS_OFFER         = "status-offer";
-    private static final String STYLE_STATUS_ACCEPTED      = "status-accepted";
-    private static final String STYLE_STATUS_REJECTED      = "status-rejected";
-    private static final String STYLE_STATUS_WITHDRAWN     = "status-withdrawn";
-    private static final String STYLE_STATUS_DEFAULT       = "status-default";
+    private static final String STYLE_STATUS_PILL         = "status-pill";
+    private static final String STYLE_STATUS_APPLIED      = "status-applied";
+    private static final String STYLE_STATUS_INTERVIEWING = "status-interviewing";
+    private static final String STYLE_STATUS_OFFER        = "status-offer";
+    private static final String STYLE_STATUS_ACCEPTED     = "status-accepted";
+    private static final String STYLE_STATUS_REJECTED     = "status-rejected";
+    private static final String STYLE_STATUS_WITHDRAWN    = "status-withdrawn";
+    private static final String STYLE_STATUS_DEFAULT      = "status-default";
 
     @FXML private Label statTotal;
     @FXML private Label statApplied;
@@ -140,6 +140,22 @@ public class DashboardController {
                 || app.getRoleTitle().toLowerCase().contains(lowerKeyword);
     }
 
+    /**
+     * Maps an application status name to its corresponding CSS style class for the status pill.
+     *
+     * @param status The {@link ApplicationStatus} name (as returned by {@code name()}).
+     * @return The CSS class string to apply to the status pill label.
+     */
+    private static String getStatusStyle(String status) {
+        if (status.equals(ApplicationStatus.APPLIED.name()))       return STYLE_STATUS_APPLIED;
+        if (status.equals(ApplicationStatus.INTERVIEWING.name()))  return STYLE_STATUS_INTERVIEWING;
+        if (status.equals(ApplicationStatus.OFFER.name()))         return STYLE_STATUS_OFFER;
+        if (status.equals(ApplicationStatus.ACCEPTED.name()))      return STYLE_STATUS_ACCEPTED;
+        if (status.equals(ApplicationStatus.REJECTED.name()))      return STYLE_STATUS_REJECTED;
+        if (status.equals(ApplicationStatus.WITHDRAWN.name()))     return STYLE_STATUS_WITHDRAWN;
+        return STYLE_STATUS_DEFAULT;
+    }
+
     private void setupTable() {
         applicationTable.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
@@ -176,23 +192,6 @@ public class DashboardController {
                     pill.getStyleClass().add(getStatusStyle(value));
                     setGraphic(pill);
                 }
-            }
-
-            private String getStatusStyle(String status) {
-                if (status.equals(ApplicationStatus.APPLIED.name())) {
-                    return STYLE_STATUS_APPLIED;
-                } else if (status.equals(ApplicationStatus.INTERVIEWING.name())) {
-                    return STYLE_STATUS_INTERVIEWING;
-                } else if (status.equals(ApplicationStatus.OFFER.name())) {
-                    return STYLE_STATUS_OFFER;
-                } else if (status.equals(ApplicationStatus.ACCEPTED.name())) {
-                    return STYLE_STATUS_ACCEPTED;
-                } else if (status.equals(ApplicationStatus.REJECTED.name())) {
-                    return STYLE_STATUS_REJECTED;
-                } else if (status.equals(ApplicationStatus.WITHDRAWN.name())) {
-                    return STYLE_STATUS_WITHDRAWN;
-                }
-                return STYLE_STATUS_DEFAULT;
             }
         });
 

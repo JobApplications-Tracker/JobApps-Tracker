@@ -61,7 +61,8 @@ public class MainController {
 
     /**
      * Navigates to the dashboard view and marks its sidebar button as active.
-     * Also wires the new-application callback so the dashboard can trigger navigation.
+     * Also wires the new-application and edit-application callbacks so the
+     * dashboard can trigger navigation to those views.
      */
     @FXML
     public void showDashboard() {
@@ -80,6 +81,12 @@ public class MainController {
         }
     }
 
+    /**
+     * Navigates to the edit-application view for the given application,
+     * wiring a back callback so the user can return to the dashboard.
+     *
+     * @param app The application whose details should be loaded into the edit form.
+     */
     private void showEditApplication(Application app) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_EDIT_APPLICATION));

@@ -29,6 +29,13 @@ public class CompareController {
 
     private static final String STYLE_ROW_BEST_PAY = "row-best-pay";
 
+    /**
+     * Modifier key label used in the multi-select hint, resolved once at class load time.
+     * Shows "Cmd" on macOS and "Ctrl" on all other platforms.
+     */
+    private static final String MULTI_SELECT_KEY =
+            System.getProperty("os.name", "").toLowerCase().contains("mac") ? "Cmd" : "Ctrl";
+
     @FXML private ListView<Application> appListView;
     @FXML private TableView<Application> compareTable;
     @FXML private TableColumn<Application, String> colCompany;
@@ -109,6 +116,10 @@ public class CompareController {
         return appController.compareApplications(ids);
     }
 
+    /**
+     * Configures the comparison table columns, row highlighting, and placeholder label.
+     * Must be called during {@link #initialize()} before any data is loaded.
+     */
     private void setupTable() {
         compareTable.setColumnResizePolicy(
                 TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
@@ -154,20 +165,36 @@ public class CompareController {
         compareTable.setPlaceholder(new Label("Select applications on the left to compare."));
     }
 
+    /**
+     * Fetches all applications from the controller and repopulates the list view.
+     * Clears any existing selection to avoid stale comparison state.
+     */
     private void loadApplications() {
         List<Application> apps = appController.getAllApplications();
         appListView.getSelectionModel().clearSelection();
         allApps.setAll(apps);
     }
 
+    /**
+     * Updates the hint label below the comparison table heading.
+     * Shows an empty-state message if no applications exist, or a
+     * platform-appropriate multi-select instruction otherwise.
+     */
     private void updateHintLabel() {
         if (allApps.isEmpty()) {
             hintLabel.setText("No applications found. Add some from the Dashboard first.");
         } else {
-            hintLabel.setText("Click an app to compare. Hold ⌘ (Mac) or Ctrl (Windows) and click to select several.");
+            hintLabel.setText(
+                    "Click to select. Hold " + MULTI_SELECT_KEY
+                            + " to select multiple. Highest pay is highlighted.");
         }
     }
 
+    /**
+     * Reacts to changes in the list view's selection by refreshing the comparison table.
+     * Clears the table if no applications are selected, otherwise delegates to
+     * {@link ApplicationController#compareApplications(List)} to sort by pay descending.
+     */
     private void updateComparisonFromSelection() {
         List<Application> selected = new ArrayList<>(
                 appListView.getSelectionModel().getSelectedItems());

@@ -254,8 +254,13 @@
     -fx-font-weight: bold;
 }
 
-.error-label  { -fx-text-fill: #e55b5b; -fx-font-size: 12px; }
-.hint-label   { -fx-text-fill: #a0a4be; -fx-font-size: 12px; }
+.error-label    { -fx-text-fill: #e55b5b; -fx-font-size: 12px; }
+.hint-label     { -fx-text-fill: #a0a4be; -fx-font-size: 12px; }
+
+/* ── Feedback Labels (used in EditApplicationController) ───── */
+.feedback-error   { -fx-text-fill: #d45b5b; -fx-font-size: 12px; }
+.feedback-success { -fx-text-fill: #3ea87a; -fx-font-size: 12px; }
+.feedback-neutral { -fx-text-fill: #a0a4be; -fx-font-size: 12px; }
 
 /* ── Table ─────────────────────────────────────────────────── */
 .table-view {
