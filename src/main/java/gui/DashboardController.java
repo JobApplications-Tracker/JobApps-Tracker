@@ -141,6 +141,8 @@ public class DashboardController {
     }
 
     private void setupTable() {
+        applicationTable.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         colCompany.setCellValueFactory(new PropertyValueFactory<>("companyName"));
         colRole.setCellValueFactory(new PropertyValueFactory<>("roleTitle"));
         colStatus.setCellValueFactory(c ->

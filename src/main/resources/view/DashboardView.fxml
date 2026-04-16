@@ -87,14 +87,13 @@
     </TextField>
 
     <!-- Applications table -->
-    <TableView fx:id="applicationTable" VBox.vgrow="ALWAYS" styleClass="table-view"
-               columnResizePolicy="CONSTRAINED_RESIZE_POLICY">
+    <TableView fx:id="applicationTable" VBox.vgrow="ALWAYS" styleClass="table-view">
         <columns>
-            <TableColumn fx:id="colCompany"  text="Company"  minWidth="120"/>
-            <TableColumn fx:id="colRole"     text="Role"     minWidth="120"/>
-            <TableColumn fx:id="colStatus"   text="Status"   minWidth="100" maxWidth="160"/>
-            <TableColumn fx:id="colDeadline" text="Deadline" minWidth="90"  maxWidth="140"/>
-            <TableColumn fx:id="colAction"   text=""         minWidth="90"  maxWidth="90"
+            <TableColumn fx:id="colCompany"  text="Company"  prefWidth="200" minWidth="100" maxWidth="300"/>
+            <TableColumn fx:id="colRole"     text="Role"     prefWidth="180" minWidth="100" maxWidth="280"/>
+            <TableColumn fx:id="colStatus"   text="Status"   prefWidth="130" minWidth="100" maxWidth="160"/>
+            <TableColumn fx:id="colDeadline" text="Deadline" prefWidth="110" minWidth="90"  maxWidth="140"/>
+            <TableColumn fx:id="colAction"   text=""         prefWidth="80"  minWidth="80"  maxWidth="80"
                          sortable="false"/>
         </columns>
         <placeholder>
