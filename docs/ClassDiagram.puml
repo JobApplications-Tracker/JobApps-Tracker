@@ -1,0 +1,180 @@
+@startuml ClassDiagram
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+skinparam defaultFontSize 13
+
+!define GUI_COLOR #B3D9FF
+!define LOGIC_COLOR #C8E6C9
+!define STORAGE_COLOR #FFE0B2
+!define ENUM_COLOR #E1BEE7
+
+' ───────────────────────────────────────
+'  GUI LAYER
+' ───────────────────────────────────────
+package "GUI Layer" as guiLayer <<Rectangle>> {
+
+    class MainController GUI_COLOR {
+        +showDashboard()
+        +showCalendar()
+        +showCompare()
+    }
+
+    class DashboardController GUI_COLOR {
+        +loadData()
+        +matchesSearch(app, keyword): boolean
+    }
+
+    class EditApplicationController GUI_COLOR {
+        +loadApplication(app)
+    }
+
+    class NewApplicationController GUI_COLOR {
+        +validateInput(company, role, payText): String
+    }
+
+    class CompareController GUI_COLOR {
+        +getComparedApplications(ids): List
+    }
+
+    class CalendarController GUI_COLOR {
+        +loadData()
+        +loadEvents()
+    }
+}
+
+' ───────────────────────────────────────
+'  LOGIC LAYER
+' ───────────────────────────────────────
+package "Logic Layer" as logicLayer <<Rectangle>> {
+
+    class Application LOGIC_COLOR {
+        -id: String
+        -companyName: String
+        -roleTitle: String
+        -pay: double
+        -location: String
+        -status: ApplicationStatus
+        -dateApplied: LocalDate
+        -deadline: LocalDate
+        -notes: String
+    }
+
+    class Interview LOGIC_COLOR {
+        -id: String
+        -applicationId: String
+        -round: int
+        -date: LocalDateTime
+        -notes: String
+    }
+
+    class Reminder LOGIC_COLOR {
+        -id: String
+        -applicationId: String
+        -type: ReminderType
+        -triggerDate: LocalDate
+        -dismissed: boolean
+    }
+
+    class ApplicationController LOGIC_COLOR {
+        +addApplication(): Application
+        +getAllApplications(): List
+        +getApplicationById(id): Application
+        +updateStatus(id, newStatus): Application
+        +updateDetails(id, ...): Application
+        +updateDeadline(id, deadline): Application
+        +updateNotes(id, notes): Application
+        +deleteApplication(id)
+        +compareApplications(ids): List
+        +filterByStatus(status): List
+    }
+
+    class InterviewController LOGIC_COLOR {
+        +addInterview(): Interview
+        +getAllInterviews(): List
+        +getInterviewsByApplication(appId): List
+        +updateNotes(id, notes): Interview
+    }
+
+    class ReminderService LOGIC_COLOR {
+        +addReminder(): Reminder
+        +getUpcomingReminders(days): List
+        +dismissReminder(id)
+    }
+
+    enum ApplicationStatus ENUM_COLOR {
+        APPLIED
+        INTERVIEWING
+        OFFER
+        REJECTED
+        ACCEPTED
+        WITHDRAWN
+    }
+
+    enum ReminderType ENUM_COLOR {
+        DEADLINE
+        INTERVIEW
+        FOLLOWUP
+    }
+}
+
+' ───────────────────────────────────────
+'  STORAGE LAYER
+' ───────────────────────────────────────
+package "Storage Layer" as storageLayer <<Rectangle>> {
+
+    interface Storage <<interface>> STORAGE_COLOR {
+        +saveApplication(app)
+        +loadAllApplications(): List
+        +updateApplication(app)
+        +deleteApplication(id)
+        +saveInterview(interview)
+        +loadAllInterviews(): List
+        +updateInterview(interview)
+        +saveReminder(reminder)
+        +loadAllReminders(): List
+        +updateReminder(reminder)
+    }
+
+    class FileStorage STORAGE_COLOR {
+    }
+
+    class InMemoryStorage <<test stub>> STORAGE_COLOR {
+    }
+}
+
+' ───────────────────────────────────────
+'  RELATIONSHIPS
+' ───────────────────────────────────────
+
+MainController --> DashboardController
+MainController --> EditApplicationController
+MainController --> NewApplicationController
+MainController --> CompareController
+MainController --> CalendarController
+
+DashboardController --> ApplicationController
+EditApplicationController --> ApplicationController
+NewApplicationController --> ApplicationController
+CompareController --> ApplicationController
+CalendarController --> ApplicationController
+CalendarController --> InterviewController
+CalendarController --> ReminderService
+
+ApplicationController --> Storage : uses
+InterviewController --> Storage : uses
+ReminderService --> Storage : uses
+
+ApplicationController ..> Application : manages
+InterviewController ..> Interview : manages
+ReminderService ..> Reminder : manages
+
+Application --> ApplicationStatus
+Reminder --> ReminderType
+
+FileStorage .up.|> Storage
+InMemoryStorage .up.|> Storage
+
+@enduml

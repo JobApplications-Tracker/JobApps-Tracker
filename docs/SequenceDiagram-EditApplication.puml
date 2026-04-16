@@ -1,0 +1,72 @@
+@startuml SequenceDiagram-EditApplication
+
+skinparam shadowing false
+skinparam sequenceArrowColor #444444
+skinparam sequenceLifeLineBorderColor #888888
+skinparam participantBackgroundColor #B3D9FF
+skinparam defaultFontSize 12
+
+title Sequence Diagram — Edit Application Details
+
+actor User
+participant "DashboardController" as Dashboard #B3D9FF
+participant "MainController" as Main #B3D9FF
+participant "EditApplicationController" as Edit #B3D9FF
+participant "ApplicationController" as Logic #C8E6C9
+participant "FileStorage" as Storage #FFE0B2
+
+User -> Dashboard : Clicks Edit button on row
+activate Dashboard
+Dashboard -> Main : onEditApplication callback(app)
+deactivate Dashboard
+activate Main
+Main -> Edit : loadApplication(app)
+deactivate Main
+activate Edit
+
+Edit --> User : Edit form shown\nwith current values
+
+User -> Edit : Updates fields, clicks Save
+
+Edit -> Logic : updateDetails(id, company,\nrole, pay, location)
+activate Logic
+Logic -> Logic : Validate company/role non-blank
+Logic -> Storage : updateApplication(app)
+activate Storage
+Storage --> Logic : OK
+deactivate Storage
+Logic --> Edit : Updated Application
+deactivate Logic
+
+Edit -> Logic : updateStatus(id, newStatus)
+activate Logic
+Logic -> Logic : Validate status transition
+Logic -> Storage : updateApplication(app)
+activate Storage
+Storage --> Logic : OK
+deactivate Storage
+Logic --> Edit : Updated Application
+deactivate Logic
+
+Edit -> Logic : updateDeadline(id, deadline)
+activate Logic
+Logic -> Storage : updateApplication(app)
+activate Storage
+Storage --> Logic : OK
+deactivate Storage
+Logic --> Edit : Updated Application
+deactivate Logic
+
+Edit -> Logic : updateNotes(id, notes)
+activate Logic
+Logic -> Storage : updateApplication(app)
+activate Storage
+Storage --> Logic : OK
+deactivate Storage
+Logic --> Edit : Updated Application
+deactivate Logic
+
+Edit --> User : "Changes saved" feedback
+deactivate Edit
+
+@enduml

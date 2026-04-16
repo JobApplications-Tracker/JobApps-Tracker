@@ -6,23 +6,24 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="gui.MainController"
-            style="-fx-background-color: #141414;">
+            style="-fx-background-color: #f5f6fa;">
 
     <left>
         <VBox styleClass="sidebar">
-            <Label text="AppTracker" styleClass="sidebar-logo"/>
+            <Label text="&#x1f4bc;  AppTracker" styleClass="sidebar-logo"/>
+            <Label text="Job Application Manager" styleClass="sidebar-tagline"/>
             <Separator/>
             <Label text="NAVIGATION" styleClass="sidebar-title"/>
-            <Button fx:id="btnDashboard" text="Dashboard"
+            <Button fx:id="btnDashboard" text="&#x25a0;  Dashboard"
                     maxWidth="Infinity" onAction="#showDashboard"/>
-            <Button fx:id="btnCalendar"  text="Calendar"
+            <Button fx:id="btnCalendar"  text="&#x25cb;  Calendar"
                     maxWidth="Infinity" onAction="#showCalendar"/>
-            <Button fx:id="btnCompare"   text="Compare"
+            <Button fx:id="btnCompare"   text="&#x25b3;  Compare"
                     maxWidth="Infinity" onAction="#showCompare"/>
         </VBox>
     </left>
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #141414;"/>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #f5f6fa;"/>
     </center>
 
 </BorderPane>

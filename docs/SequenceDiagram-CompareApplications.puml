@@ -1,0 +1,35 @@
+@startuml SequenceDiagram-CompareApplications
+
+skinparam shadowing false
+skinparam sequenceArrowColor #444444
+skinparam sequenceLifeLineBorderColor #888888
+skinparam participantBackgroundColor #B3D9FF
+skinparam defaultFontSize 12
+
+title Sequence Diagram — Compare Applications
+
+actor User
+participant "CompareController" as UI #B3D9FF
+participant "ApplicationController" as Logic #C8E6C9
+participant "FileStorage" as Storage #FFE0B2
+
+User -> UI : Selects applications\nvia multi-select list
+activate UI
+
+UI -> Logic : compareApplications([id1, id2, ...])
+activate Logic
+
+Logic -> Storage : loadAllApplications()
+activate Storage
+Storage --> Logic : All applications
+deactivate Storage
+
+Logic -> Logic : Filter by ids,\nsort by pay descending
+
+Logic --> UI : Sorted list of Applications
+deactivate Logic
+
+UI --> User : Comparison table with\nbest pay highlighted
+deactivate UI
+
+@enduml

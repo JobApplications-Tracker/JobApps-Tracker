@@ -6,13 +6,16 @@
 <VBox spacing="0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="gui.CalendarController"
       styleClass="calendar-page">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
     <Label text="Pages / Calendar" styleClass="breadcrumb"/>
     <Label text="Calendar" styleClass="page-title"/>
-    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="calendar-nav-header">
-        <Button text="‹" onAction="#handlePrevMonth" styleClass="nav-arrow"/>
+    <Region prefHeight="12"/>
+
+    <HBox alignment="CENTER_LEFT" spacing="14" style="-fx-padding: 0 0 14 0;">
+        <Button text="&#x25c0;" onAction="#handlePrevMonth" styleClass="nav-arrow"/>
         <Label fx:id="monthYearLabel" styleClass="calendar-month-label"/>
-        <Button text="›" onAction="#handleNextMonth" styleClass="nav-arrow"/>
+        <Button text="&#x25b6;" onAction="#handleNextMonth" styleClass="nav-arrow"/>
     </HBox>
 
     <GridPane styleClass="calendar-dow-header">
@@ -47,8 +50,8 @@
     </GridPane>
 
     <HBox styleClass="calendar-legend" alignment="CENTER_LEFT">
-        <Label text="● Deadline"  styleClass="legend-deadline"/>
-        <Label text="● Interview" styleClass="legend-interview"/>
-        <Label text="● Reminder"  styleClass="legend-reminder"/>
+        <Label text="&#x25cf;  Deadline"   styleClass="legend-deadline"/>
+        <Label text="&#x25cf;  Interview"  styleClass="legend-interview"/>
+        <Label text="&#x25cf;  Reminder"   styleClass="legend-reminder"/>
     </HBox>
 </VBox>

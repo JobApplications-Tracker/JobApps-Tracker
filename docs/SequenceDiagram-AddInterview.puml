@@ -1,0 +1,41 @@
+@startuml SequenceDiagram-AddInterview
+
+skinparam shadowing false
+skinparam sequenceArrowColor #444444
+skinparam sequenceLifeLineBorderColor #888888
+skinparam participantBackgroundColor #B3D9FF
+skinparam defaultFontSize 12
+
+title Sequence Diagram — Add Interview\n(with Referential Integrity Check)
+
+actor User
+participant "GUI Layer" as UI #B3D9FF
+participant "InterviewController" as Logic #C8E6C9
+participant "FileStorage" as Storage #FFE0B2
+
+User -> UI : Submits New Interview Form
+activate UI
+
+UI -> Logic : addInterview(appId, round, date)
+activate Logic
+
+Logic -> Storage : loadAllApplications()
+activate Storage
+Storage --> Logic : List of Applications
+deactivate Storage
+
+Logic -> Logic : Verify appId exists in list
+
+Logic -> Storage : saveInterview(interview)
+activate Storage
+Storage -> Storage : Escape fields and append\nto interviews.dat
+Storage --> Logic : OK
+deactivate Storage
+
+Logic --> UI : Return Interview object
+deactivate Logic
+
+UI --> User : Refresh view
+deactivate UI
+
+@enduml

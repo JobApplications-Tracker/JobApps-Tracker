@@ -1,6 +1,7 @@
 package logic;
 
 import storage.Storage;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,10 +35,10 @@ public class ReminderService {
      */
     public Reminder addReminder(String applicationId, ReminderType type, LocalDate triggerDate) {
         // Referential Integrity Check
-        boolean appExists = this.storage.loadAllApplications().stream()
+        boolean isAppExists = this.storage.loadAllApplications().stream()
                 .anyMatch(a -> a.getId().equals(applicationId));
 
-        if (!appExists) {
+        if (!isAppExists) {
             throw new IllegalArgumentException("Cannot add reminder: Application ID " + applicationId + " not found.");
         }
 

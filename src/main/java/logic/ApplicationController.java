@@ -1,6 +1,8 @@
 package logic;
 
 import storage.Storage;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,6 +107,63 @@ public class ApplicationController {
         }
 
         app.setStatus(newStatus);
+        this.storage.updateApplication(app);
+        return app;
+    }
+
+    /**
+     * Updates the core details of an existing application.
+     *
+     * @param id          The ID of the application to update.
+     * @param companyName The new company name.
+     * @param roleTitle   The new role title.
+     * @param pay         The new pay value.
+     * @param location    The new location.
+     * @return The updated Application object.
+     * @throws IllegalArgumentException if company name or role title is blank.
+     */
+    public Application updateDetails(String id, String companyName,
+                                     String roleTitle, double pay,
+                                     String location) {
+        if (companyName == null || companyName.isBlank()) {
+            throw new IllegalArgumentException("Company name cannot be empty.");
+        }
+        if (roleTitle == null || roleTitle.isBlank()) {
+            throw new IllegalArgumentException("Role title cannot be empty.");
+        }
+        Application app = this.getApplicationById(id);
+        app.setCompanyName(companyName);
+        app.setRoleTitle(roleTitle);
+        app.setPay(pay);
+        app.setLocation(location);
+        this.storage.updateApplication(app);
+        return app;
+    }
+
+    /**
+     * Updates the deadline of an existing application.
+     *
+     * @param id       The ID of the application to update.
+     * @param deadline The new deadline date, or null to clear it.
+     * @return The updated Application object.
+     */
+    public Application updateDeadline(String id, LocalDate deadline) {
+        Application app = this.getApplicationById(id);
+        app.setDeadline(deadline);
+        this.storage.updateApplication(app);
+        return app;
+    }
+
+    /**
+     * Updates the notes of an existing application.
+     *
+     * @param id    The ID of the application to update.
+     * @param notes The new notes text.
+     * @return The updated Application object.
+     */
+    public Application updateNotes(String id, String notes) {
+        Application app = this.getApplicationById(id);
+        app.setNotes(notes != null ? notes : "");
         this.storage.updateApplication(app);
         return app;
     }

@@ -18,7 +18,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for FileStorage.
@@ -86,7 +90,8 @@ class FileStorageTest {
     // Helpers
     // =========================================================================
 
-    /** * Creates a minimal Application with no deadline or notes set for testing.
+    /**
+     * Creates a minimal Application with no deadline or notes set for testing.
      *
      * @param company The company name.
      * @param role    The role title.
@@ -297,7 +302,10 @@ class FileStorageTest {
             assertEquals(1, storage.loadAllApplications().size());
         }
 
-        /** Verifies that data written by one FileStorage instance is readable by a separate instance pointing at the same directory. */
+        /**
+         * Verifies that data written by one FileStorage instance is readable
+         * by a separate instance pointing at the same directory.
+         */
         @Test
         void persistence_dataReadableByNewStorageInstance() {
             Application app = makeApp("Persist Co", "Engineer");

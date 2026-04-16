@@ -4,9 +4,9 @@
 
 **Project Name:** Internship / Job Tracker
 **Document Type:** Product Requirements Document
-**Version:** 1.0
-**Date:** 15 March 2026
-**Based on:** Software Design Document v1.0
+**Version:** 2.0
+**Date:** 16 April 2026
+**Based on:** Software Design Document v2.0
 
 ---
 
@@ -28,7 +28,7 @@
 
 ### 1.1 Purpose
 
-The Internship / Job Tracker is a centralized application that helps students manage all their job and internship applications in one place. Students applying to multiple roles simultaneously often lose track of application statuses, interview schedules, offer deadlines, and company notes. This product addresses that problem by providing structured tracking, reminders, sort and filter features, and a personal document vault.
+The Internship / Job Tracker is a centralized application that helps students manage all their job and internship applications in one place. Students applying to multiple roles simultaneously often lose track of application statuses, interview schedules, offer deadlines, and company notes. This product addresses that problem by providing structured tracking, reminders, comparison features, and notes management.
 
 ### 1.2 Problem Statement
 
@@ -36,9 +36,8 @@ Students face the following pain points during their job search:
 
 - Losing track of which stage they are at with each company
 - Missing offer acceptance deadlines due to no centralized reminder system
-- Repeating data entry (resume, personal details) across every application
-- Struggling to arrange opportunities according to personal criteria
-- Forgetting interview notes and company-specific research after conversations
+- Struggling to compare opportunities based on pay, location, and status
+- Forgetting interview notes and company-specific details after conversations
 
 ### 1.3 Target Users
 
@@ -67,12 +66,12 @@ All user stories are prioritized using three levels:
 | ID | User Story | Priority |
 |---|---|---|
 | US-01 | As a student, I want to be able to monitor the deadline of offers, so that I can decide which ones to accept or decline. | Level 0 |
-| US-02 | As a student, I want to filter and compare internships by pay, location, and job scope, so that I can prioritize which roles to focus on. | Level 0 |
-| US-03 | As a student, I want to store and reuse my resume, documents, and personal details in one place, so that I don't have to repeatedly retype or re-upload the same information for every application. | Level 1 |
-| US-04 | As a student, I want to track interview rounds so that I know which stage I am in. | Level 0 |
-| US-05 | As a student, I want to store interview notes so that I can prepare better. | Level 1 |
-| US-06 | As a student, I want to see upcoming interview dates in one place so that I can prepare accordingly. | Level 0 |
-| US-07 | As a student, I want to keep a set of notes on the company itself and what was discussed during the interviews. | Level 1 |
+| US-02 | As a student, I want to compare internships by pay and location, so that I can prioritize which roles to focus on. | Level 0 |
+| US-03 | As a student, I want to track interview rounds so that I know which stage I am in. | Level 0 |
+| US-04 | As a student, I want to store interview notes so that I can prepare better. | Level 1 |
+| US-05 | As a student, I want to see upcoming interview dates in one place so that I can prepare accordingly. | Level 0 |
+| US-06 | As a student, I want to edit application details (company, role, pay, location, status, deadline, notes) so that I can keep my records up to date. | Level 0 |
+| US-07 | As a student, I want to keep notes on each application and what was discussed during interviews. | Level 1 |
 
 ---
 
@@ -81,26 +80,41 @@ All user stories are prioritized using three levels:
 ### Feature 1 — Application Tracking Dashboard
 
 - Centralized dashboard showing all applications and their statuses
-  - Track stages: Applied → Interview Rounds → Offer → Rejected / Accepted
-  - View application progress at a glance
+  - Track stages: Applied → Interviewing → Offer → Accepted / Rejected / Withdrawn
+  - View application progress at a glance via stat cards, bar chart, and pie chart
+  - Search/filter applications by company name or role title
+  - Edit button per row for quick access to application editing
 
-### Feature 2 — Deadline & Interview Reminders
+### Feature 2 — Application Editing
 
-- Notifications for:
+- Full edit form for any application entry
+  - Edit core details: company name, role title, pay, location
+  - Update status with enforced transition rules
+  - Set or clear deadline dates
+  - Add or update free-text notes
+  - Delete an application with confirmation dialog
+
+### Feature 3 — Deadline & Interview Reminders
+
+- Reminders for:
   - Offer acceptance deadlines
   - Interview schedules
   - Follow-ups with HR
+- Reminders can be dismissed once acknowledged
 
-### Feature 3 — Calendar-Style Overview of Upcoming Events
+### Feature 4 — Calendar-Style Overview of Upcoming Events
 
 - A calendar view displaying all upcoming events across all applications in one place
+  - Application deadlines
+  - Interview dates
+  - Reminder trigger dates
+- Monthly navigation with colour-coded event badges
 
-### Feature 4 — Internship Sorting and Filtering
+### Feature 5 — Internship Comparison Tool
 
-- Compare internships by:
-  - Salary
-  - Location / travel time
-  - Job scope
+- Compare applications by selecting multiple entries from a list (Cmd/Ctrl-click)
+- Side-by-side comparison table showing: company, role, pay, location, status, deadline
+- Best-pay row is visually highlighted
 
 ---
 
@@ -112,44 +126,44 @@ Functional requirements specify **what the system must do**.
 
 | ID | Requirement | Linked User Story | Priority |
 |---|---|---|---|
-| FR-01 | The system shall allow students to create a new application entry with fields: Company Name, Role Title, Date Applied, and Status. | US-04 | Level 0 |
-| FR-02 | The system shall allow students to update the status of any application to one of the following stages: Applied, Interview Round 1, Interview Round 2, Offer, Accepted, Rejected. | US-04 | Level 0 |
-| FR-03 | The system shall display all application entries on a dashboard with their current status visible at a glance. | US-04 | Level 0 |
-| FR-04 | The system shall allow students to delete an application entry. | US-04 | Level 0 |
+| FR-01 | The system shall allow students to create a new application entry with fields: Company Name, Role Title, Pay, Location, and Status. | US-03 | Level 0 |
+| FR-02 | The system shall allow students to update the status of any application to one of the following stages: Applied, Interviewing, Offer, Rejected, Accepted, Withdrawn. | US-03 | Level 0 |
+| FR-03 | The system shall enforce valid status transitions — terminal states (Rejected, Accepted, Withdrawn) cannot be changed, and Applied cannot skip directly to Offer. | US-03 | Level 0 |
+| FR-04 | The system shall display all application entries on a dashboard with their current status visible at a glance. | US-03 | Level 0 |
+| FR-05 | The system shall allow students to delete an application entry with a confirmation dialog. | US-03 | Level 0 |
+| FR-06 | The system shall allow students to search/filter applications by company name or role title. | US-03 | Level 1 |
 
-### 5.2 Deadline & Interview Reminders
-
-| ID | Requirement | Linked User Story | Priority |
-|---|---|---|---|
-| FR-05 | The system shall allow students to set an offer acceptance deadline date on any application marked as "Offer". | US-01 | Level 0 |
-| FR-06 | The system shall display an in-app notification when an offer acceptance deadline is approaching. | US-01 | Level 0 |
-| FR-07 | The system shall allow students to add interview dates and times to any application entry. | US-06 | Level 0 |
-| FR-08 | The system shall display an in-app notification when an interview schedule is approaching. | US-06 | Level 0 |
-| FR-09 | The system shall allow students to set a follow-up reminder with a note and target date for any application. | US-06 | Level 1 |
-| FR-10 | The system shall display an in-app notification when a follow-up reminder date is reached. | US-06 | Level 1 |
-
-### 5.3 Calendar-Style Overview of Upcoming Events
+### 5.2 Application Editing
 
 | ID | Requirement | Linked User Story | Priority |
 |---|---|---|---|
-| FR-11 | The system shall provide a calendar view displaying all upcoming interviews, offer deadlines, and follow-up reminders across all applications. | US-06 | Level 1 |
-| FR-12 | The system shall allow students to select a date on the calendar to view all events occurring on that date. | US-06 | Level 1 |
+| FR-07 | The system shall allow students to edit the core details of an application: company name, role title, pay, and location. | US-06 | Level 0 |
+| FR-08 | The system shall allow students to set or clear a deadline date on any application. | US-01 | Level 0 |
+| FR-09 | The system shall allow students to write and save free-text notes per application. | US-07 | Level 1 |
 
-### 5.4 Internship Comparison Tool
+### 5.3 Deadline & Interview Reminders
 
-| ID    | Requirement | Linked User Story | Priority |
-|-------|---|---|---|
-| FR-13 | The system shall allow students to enter comparison fields for each application: salary, location, travel time, and job scope. | US-02 | Level 0 |
-| FR-14 | The system shall allow students to filter applications by salary, location, or job scope before comparing. | US-02 | Level 1 |
+| ID | Requirement | Linked User Story | Priority |
+|---|---|---|---|
+| FR-10 | The system shall allow students to set an offer acceptance deadline date on any application. | US-01 | Level 0 |
+| FR-11 | The system shall allow students to add interview dates and times to any application entry. | US-05 | Level 0 |
+| FR-12 | The system shall allow students to set a follow-up reminder with a type and target date for any application. | US-05 | Level 1 |
+| FR-13 | The system shall allow students to dismiss a reminder once it is acknowledged. | US-05 | Level 1 |
 
-### 5.5 Notes & Document Storage
+### 5.4 Calendar-Style Overview of Upcoming Events
 
-| ID    | Requirement | Linked User Story | Priority |
-|-------|---|---|---|
-| FR-15 | The system shall allow students to upload and store personal documents (e.g., resume, cover letter, transcript) locally. | US-03 | Level 1 |
-| FR-16 | The system shall allow students to store personal details (e.g., full name, email, phone number) for quick reference. | US-03 | Level 1 |
-| FR-17 | The system shall allow students to write and save free-text interview notes per application. | US-05 | Level 1 |
-| FR-18 | The system shall allow students to write and save a company research notes section per application. | US-07 | Level 1 |
+| ID | Requirement | Linked User Story | Priority |
+|---|---|---|---|
+| FR-14 | The system shall provide a calendar view displaying all upcoming deadlines, interview dates, and reminder trigger dates across all applications. | US-05 | Level 1 |
+| FR-15 | The system shall display colour-coded event badges on calendar dates to differentiate event types. | US-05 | Level 1 |
+
+### 5.5 Internship Comparison Tool
+
+| ID | Requirement | Linked User Story | Priority |
+|---|---|---|---|
+| FR-16 | The system shall allow students to select two or more applications from a list for comparison. | US-02 | Level 0 |
+| FR-17 | The system shall display a comparison table showing company, role, pay, location, status, and deadline for the selected applications, sorted by pay descending. | US-02 | Level 0 |
+| FR-18 | The system shall visually highlight the highest-pay application in the comparison table. | US-02 | Level 1 |
 
 ---
 
@@ -169,21 +183,20 @@ Non-functional requirements specify **the constraints and quality standards** th
 | ID | Requirement |
 |---|---|
 | NFR-03 | The system shall provide a clear and intuitive interface that a first-time user can navigate without a manual. |
-| NFR-04 | Updating an application status shall be achievable in no more than 2 user interactions. |
+| NFR-04 | Updating an application status shall be achievable in no more than 2 user interactions (click Edit, change status, save). |
 
 ### 6.3 Security & Privacy
 
-| ID     | Requirement |
-|--------|---|
+| ID | Requirement |
+|---|---|
 | NFR-05 | All data shall be stored locally on the user's device; no data shall be transmitted to any external server. |
-| NFR-06 | Uploaded documents shall be accessible only through the application. |
 
 ### 6.4 Portability
 
-| ID     | Requirement                                                     |
-|--------|-----------------------------------------------------------------|
-| NFR-07 | The system shall operate fully without an internet connection.  |
-| NFR-08 | The system shall not depend on any third-party API or database. |
+| ID | Requirement |
+|---|---|
+| NFR-06 | The system shall operate fully without an internet connection. |
+| NFR-07 | The system shall not depend on any third-party API or database. |
 
 ---
 
@@ -203,9 +216,12 @@ Non-functional requirements specify **the constraints and quality standards** th
 
 1. Student opens the Application Dashboard.
 2. System displays all application entries with their current statuses.
-3. Student selects an application entry.
-4. Student updates the status to the current interview round (e.g., Interview Round 1).
-5. System saves and reflects the updated status on the Dashboard.
+3. Student clicks the Edit button on an application entry.
+4. System loads the Edit Application form with the current details.
+5. Student updates the status (e.g., from Applied to Interviewing).
+6. Student clicks Save.
+7. System validates the status transition and saves the update.
+8. System navigates back to the Dashboard with the updated status reflected.
 
 Use case ends.
 
@@ -214,6 +230,11 @@ Use case ends.
 2a. No application entries exist.
 - 2a1. System displays an empty dashboard with a prompt to add a new application.
 - Use case ends.
+
+7a. Status transition is invalid (e.g., Rejected to Offer).
+- 7a1. System displays an error message explaining the invalid transition.
+- 7a2. Student selects a valid status.
+- Resume from step 6.
 
 *a. Application data fails to load.
 - *a1. System informs the student that data could not be retrieved.
@@ -227,29 +248,28 @@ Use case ends.
 
 **Actor:** Student
 
-**Precondition:** Student is logged in and has at least one application entry with status set to "Offer".
+**Precondition:** Student has at least one application entry in the system.
 
 **MSS:**
 
 1. Student opens the Application Dashboard.
 2. System displays all application entries.
-3. Student selects an application entry marked as "Offer".
-4. Student performs Set Offer Deadline (UC-02a) to enter the acceptance deadline date.
-5. System saves the deadline and schedules a notification.
-6. When the deadline is approaching, the system displays an in-app notification.
+3. Student clicks the Edit button on an application entry.
+4. System loads the Edit Application form.
+5. Student sets a deadline date using the date picker.
+6. Student clicks Save.
+7. System saves the deadline.
+8. Student navigates to the Calendar view.
+9. System displays the deadline as a colour-coded badge on the calendar.
 
 Use case ends.
 
 **Extensions:**
 
-2a. No applications are marked as "Offer".
-- 2a1. System displays no applicable entries in the offer view.
-- Use case ends.
-
-6a. Deadline date has already passed when entered.
-- 6a1. System warns the student that the entered date is in the past.
-- 6a2. Student re-enters a valid deadline date.
-- Resume from step 5.
+5a. Student wants to clear an existing deadline.
+- 5a1. Student clicks the Clear Deadline button.
+- 5a2. Deadline field is cleared.
+- Resume from step 6.
 
 *a. Data fails to save.
 - *a1. System informs the student that the deadline could not be saved.
@@ -257,21 +277,21 @@ Use case ends.
 
 ---
 
-### UC-03: Filter and Compare Internships
+### UC-03: Compare Internship Offers
 
 **System:** Internship / Job Tracker
 
 **Actor:** Student
 
-**Precondition:** Student has at least two application entries with comparison fields (salary, location, job scope) populated.
+**Precondition:** Student has at least two application entries saved in the system.
 
 **MSS:**
 
-1. Student navigates to the Internship Comparison Tool.
-2. System displays all application entries with their comparison fields.
-3. Student performs Filter Applications by Criterion (UC-03a) to narrow down the list by salary, location, or job scope.
-4. Student selects two or more applications to compare.
-5. System displays a side-by-side view of the selected applications showing salary, location / travel time, and job scope.
+1. Student navigates to the Comparison page.
+2. System displays a list of all applications with a multi-select list.
+3. Student selects two or more applications (using Cmd/Ctrl-click).
+4. System displays a comparison table showing company, role, pay, location, status, and deadline for the selected applications, sorted by pay descending.
+5. System highlights the best-pay row.
 
 Repeat steps 3–5 until the student is satisfied.
 
@@ -279,13 +299,13 @@ Use case ends.
 
 **Extensions:**
 
-2a. No application entries have comparison fields populated.
-- 2a1. System notifies the student that no comparable data is available.
+2a. No application entries exist.
+- 2a1. System displays an empty list.
 - Use case ends.
 
-4a. Student selects fewer than two applications.
-- 4a1. System prompts the student to select at least two applications to compare.
-- Resume from step 4.
+3a. Student selects fewer than two applications.
+- 3a1. System displays a hint label prompting multi-selection.
+- Resume from step 3.
 
 *a. Data fails to load.
 - *a1. System informs the student that comparison data could not be retrieved.
@@ -293,24 +313,74 @@ Use case ends.
 
 ---
 
-### UC-04: Log Interview Notes
+### UC-04: Edit Application Details
 
 **System:** Internship / Job Tracker
 
 **Actor:** Student
 
-**Precondition:** Student has at least one application entry with at least one interview round recorded.
+**Precondition:** Student has at least one application entry saved in the system.
 
 **MSS:**
 
 1. Student opens the Application Dashboard.
 2. System displays all application entries.
-3. Student selects an application entry.
-4. Student navigates to the Notes section.
-5. Student writes interview notes in the free-text field.
-6. System saves the notes automatically.
+3. Student clicks the Edit button on an application row.
+4. System loads the Edit Application form with all current details (company, role, pay, location, status, deadline, notes).
+5. Student modifies the desired fields.
+6. Student clicks Save.
+7. System validates all fields (company/role non-blank, pay is numeric, status transition is valid).
+8. System saves all changes and displays a "Changes saved" confirmation.
+9. Student clicks Back to return to the Dashboard.
 
-Repeat steps 5–6 until the student is satisfied.
+Use case ends.
+
+**Extensions:**
+
+7a. Company name or role title is blank.
+- 7a1. System displays an error message.
+- 7a2. Student corrects the field.
+- Resume from step 6.
+
+7b. Pay value is not a valid number.
+- 7b1. System displays "Pay must be a valid number" error.
+- 7b2. Student corrects the pay field.
+- Resume from step 6.
+
+7c. Status transition is invalid.
+- 7c1. System displays an error message explaining the invalid transition.
+- 7c2. Student selects a valid status.
+- Resume from step 6.
+
+6a. Student clicks Delete instead of Save.
+- 6a1. System shows a confirmation dialog.
+- 6a2. Student confirms deletion.
+- 6a3. System deletes the application and navigates back to the Dashboard.
+- Use case ends.
+
+*a. Data fails to save.
+- *a1. System informs the student that changes could not be saved.
+- Use case ends.
+
+---
+
+### UC-05: Log Interview Notes
+
+**System:** Internship / Job Tracker
+
+**Actor:** Student
+
+**Precondition:** Student has at least one application entry saved in the system.
+
+**MSS:**
+
+1. Student opens the Application Dashboard.
+2. System displays all application entries.
+3. Student clicks the Edit button on an application entry.
+4. System loads the Edit Application form.
+5. Student writes notes in the Notes text area.
+6. Student clicks Save.
+7. System saves the notes.
 
 Use case ends.
 
@@ -319,10 +389,6 @@ Use case ends.
 2a. No application entries exist.
 - 2a1. System displays an empty dashboard with a prompt to add a new application.
 - Use case ends.
-
-4a. The Notes section has no previously saved content.
-- 4a1. System displays a blank notes field.
-- Resume from step 5.
 
 *a. Notes fail to save.
 - *a1. System informs the student that the notes could not be saved.
@@ -336,9 +402,9 @@ Use case ends.
 |---|---|
 | No external services | The system must not call any third-party APIs or external services. |
 | No internet dependency | All features must function fully offline. |
-| Internal data handling | All data (applications, documents, notes) must be stored and managed locally on the user's device. |
+| Internal data handling | All data (applications, interviews, reminders, notes) must be stored and managed locally on the user's device via flat-file storage. |
 | 3-layer architecture | Development must follow the UI / Logic / Storage separation as defined in the SDD. |
-| Team split | The codebase is divided among three workstreams: UI, Logic, and Storage (Database). |
+| Team split | The codebase is divided among three workstreams: UI, Logic, and Storage. |
 
 ---
 
@@ -346,8 +412,9 @@ Use case ends.
 
 | Term | Definition |
 |---|---|
-| Application Entry | A record representing a single job or internship application, containing all associated data such as company name, status, dates, notes, and documents. |
-| Application Status | The current stage of an application in the hiring pipeline: Applied, Interview Round 1, Interview Round 2, Offer, Accepted, or Rejected. |
-| Document Vault | A local storage area within the application where students can upload and manage personal documents such as resumes and cover letters. |
+| Application Entry | A record representing a single job or internship application, containing fields: company name, role title, pay, location, status, date applied, deadline, and notes. |
+| Application Status | The current stage of an application in the hiring pipeline: Applied, Interviewing, Offer, Accepted, Rejected, or Withdrawn. |
+| Terminal State | A status from which no further transitions are allowed: Rejected, Accepted, or Withdrawn. |
 | Offer Deadline | The date by which a student must accept or reject a job or internship offer from a company. |
-| Reminder | An in-app notification triggered by a date threshold, alerting the student to an upcoming event such as an interview, offer deadline, or follow-up. |
+| Reminder | An in-app record tied to an application, with a type (Deadline, Interview, Follow-up), trigger date, and dismissed flag. |
+| Comparison Tool | A feature that allows selecting multiple applications and viewing them side-by-side, sorted by pay descending, with the highest-pay row highlighted. |

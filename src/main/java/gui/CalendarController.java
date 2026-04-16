@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import logic.Application;
 import logic.ApplicationController;
 import logic.InterviewController;
 import logic.ReminderService;
@@ -146,8 +147,8 @@ public class CalendarController {
         // Build a lookup map from application ID to company name for interview labelling
         Map<String, String> appIdToCompany = appController.getAllApplications().stream()
                 .collect(Collectors.toMap(
-                        logic.Application::getId,
-                        logic.Application::getCompanyName,
+                        Application::getId,
+                        Application::getCompanyName,
                         (a, b) -> a));
 
         // Interviews — accessed through InterviewController to respect the logic layer
@@ -187,9 +188,9 @@ public class CalendarController {
                 cell.setMinHeight(CELL_MIN_HEIGHT);
 
                 int cellIndex = row * CALENDAR_COLS + col;
-                boolean inMonth = cellIndex >= startOffset && day <= daysInMonth;
+                boolean isInMonth = cellIndex >= startOffset && day <= daysInMonth;
 
-                if (inMonth) {
+                if (isInMonth) {
                     LocalDate cellDate = currentMonth.atDay(day);
                     boolean isToday = cellDate.equals(today);
 

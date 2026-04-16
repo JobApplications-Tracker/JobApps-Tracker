@@ -1,0 +1,36 @@
+@startuml SequenceDiagram-LoadDashboard
+
+skinparam shadowing false
+skinparam sequenceArrowColor #444444
+skinparam sequenceLifeLineBorderColor #888888
+skinparam participantBackgroundColor #B3D9FF
+skinparam defaultFontSize 12
+
+title Sequence Diagram — Load Dashboard
+
+actor User
+participant "DashboardController" as UI #B3D9FF
+participant "ApplicationController" as Logic #C8E6C9
+participant "FileStorage" as Storage #FFE0B2
+
+User -> UI : Opens app / clicks Dashboard
+activate UI
+
+UI -> Logic : getAllApplications()
+activate Logic
+
+Logic -> Storage : loadAllApplications()
+activate Storage
+Storage -> Storage : Read applications.dat,\nparse each line
+Storage --> Logic : List of Application objects
+deactivate Storage
+
+Logic --> UI : List of Application objects
+deactivate Logic
+
+UI -> UI : Populate stat cards,\nbar chart, pie chart, table
+
+UI --> User : Dashboard rendered
+deactivate UI
+
+@enduml

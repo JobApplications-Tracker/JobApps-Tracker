@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import logic.Application;
 import logic.ApplicationController;
 import logic.InterviewController;
 import logic.ReminderService;
@@ -21,10 +22,11 @@ import java.util.List;
  */
 public class MainController {
 
-    private static final String FXML_DASHBOARD       = "/view/DashboardView.fxml";
-    private static final String FXML_CALENDAR        = "/view/CalendarView.fxml";
-    private static final String FXML_COMPARE         = "/view/CompareView.fxml";
-    private static final String FXML_NEW_APPLICATION = "/view/NewApplicationView.fxml";
+    private static final String FXML_DASHBOARD        = "/view/DashboardView.fxml";
+    private static final String FXML_CALENDAR         = "/view/CalendarView.fxml";
+    private static final String FXML_COMPARE          = "/view/CompareView.fxml";
+    private static final String FXML_NEW_APPLICATION  = "/view/NewApplicationView.fxml";
+    private static final String FXML_EDIT_APPLICATION = "/view/EditApplicationView.fxml";
 
     @FXML private StackPane contentArea;
     @FXML private Button btnDashboard;
@@ -70,10 +72,25 @@ public class MainController {
             DashboardController controller = loader.getController();
             controller.setAppController(appController);
             controller.setOnNewApplication(this::showNewApplication);
+            controller.setOnEditApplication(this::showEditApplication);
             controller.loadData();
             contentArea.getChildren().setAll(view);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load view: " + FXML_DASHBOARD, e);
+        }
+    }
+
+    private void showEditApplication(Application app) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_EDIT_APPLICATION));
+            Node view = loader.load();
+            EditApplicationController controller = loader.getController();
+            controller.setAppController(appController);
+            controller.setOnBack(this::showDashboard);
+            controller.loadApplication(app);
+            contentArea.getChildren().setAll(view);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load view: " + FXML_EDIT_APPLICATION, e);
         }
     }
 

@@ -9,10 +9,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Tests for the comparison and selection logic in CompareController.
+ * Tests for the comparison logic in CompareController.
  * Each test calls getComparedApplications() directly (package-private) with a
  * list of application IDs, verifying that the returned list is correctly sorted
  * by pay descending and handles edge cases such as an empty selection.
@@ -24,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * - getComparedApplications(): sort order is independent of input ID order
  *
  * Not covered (requires JavaFX runtime):
- * - loadData(): checkbox list view population and rendering
- * - updateComparison(): checkbox state change triggers table refresh
- * - updateComparison(): error dialog shown on IllegalArgumentException or IllegalStateException
+ * - loadData(): multi-select list view population and rendering
+ * - Selection change triggers comparison table refresh
+ * - Error dialog shown on runtime failures during comparison
  * - Row highlighting: highest-pay row style applied correctly in TableView
  */
 class CompareControllerTest {
@@ -43,7 +44,7 @@ class CompareControllerTest {
 
     /**
      * Verifies that passing an empty ID list returns an empty result rather than
-     * throwing an exception. This covers the case where no checkboxes are selected.
+     * throwing an exception. This covers the case where no apps are selected.
      */
     @Test
     void getComparedApplications_emptyIds_returnsEmptyList() {
