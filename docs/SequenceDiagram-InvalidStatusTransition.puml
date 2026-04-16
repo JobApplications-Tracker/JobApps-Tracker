@@ -1,0 +1,35 @@
+@startuml SequenceDiagram-InvalidStatusTransition
+
+skinparam shadowing false
+skinparam sequenceArrowColor #444444
+skinparam sequenceLifeLineBorderColor #888888
+skinparam participantBackgroundColor #B3D9FF
+skinparam defaultFontSize 12
+
+title Sequence Diagram — Invalid Status Transition
+
+actor User
+participant "EditApplicationController" as UI #B3D9FF
+participant "ApplicationController" as Logic #C8E6C9
+participant "FileStorage" as Storage #FFE0B2
+
+User -> UI : Attempts to update status
+activate UI
+
+UI -> Logic : updateStatus(id, newStatus)
+activate Logic
+
+Logic -> Storage : loadAllApplications()
+activate Storage
+Storage --> Logic : Application data
+deactivate Storage
+
+Logic -> Logic : Check current status\n(e.g. REJECTED — terminal)
+
+Logic --x UI : throw IllegalStateException
+deactivate Logic
+
+UI --> User : Display error message
+deactivate UI
+
+@enduml

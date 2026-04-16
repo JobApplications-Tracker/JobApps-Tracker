@@ -1,0 +1,36 @@
+@startuml SequenceDiagram-AddNewApplication
+
+skinparam shadowing false
+skinparam sequenceArrowColor #444444
+skinparam sequenceLifeLineBorderColor #888888
+skinparam participantBackgroundColor #B3D9FF
+skinparam defaultFontSize 12
+
+title Sequence Diagram — Add New Application
+
+actor User
+participant "NewApplicationController" as UI #B3D9FF
+participant "ApplicationController" as Logic #C8E6C9
+participant "FileStorage" as Storage #FFE0B2
+
+User -> UI : Fills in company, role,\npay, location, status
+activate UI
+
+UI -> Logic : addApplication(company, role, pay, location, status)
+activate Logic
+
+Logic -> Logic : Validate fields\n(non-null, non-blank)
+
+Logic -> Storage : saveApplication(app)
+activate Storage
+Storage -> Storage : Escape fields and append\nto applications.dat
+Storage --> Logic : OK
+deactivate Storage
+
+Logic --> UI : Return Application object
+deactivate Logic
+
+UI --> User : Navigate back to Dashboard
+deactivate UI
+
+@enduml
