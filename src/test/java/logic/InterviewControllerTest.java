@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for InterviewController.
@@ -86,6 +88,10 @@ class InterviewControllerTest {
         });
     }
 
+    /**
+     * Verifies that attempting to update notes for a non-existent interview ID
+     * throws an IllegalArgumentException.
+     */
     @Test
     void updateNotes_invalidId_throwsException() {
         assertThrows(IllegalArgumentException.class, () -> {

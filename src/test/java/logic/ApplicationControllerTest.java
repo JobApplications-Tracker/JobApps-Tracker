@@ -3,7 +3,10 @@ package logic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for ApplicationController.
@@ -98,7 +101,8 @@ class ApplicationControllerTest {
     }
 
     /**
-     * Verifies the business rule that an application must pass through the INTERVIEWING stage before receiving an OFFER.
+     * Verifies the business rule that an application must pass through
+     * the INTERVIEWING stage before receiving an OFFER.
      */
     @Test
     void updateStatus_appliedToOffer_throwsException() {
