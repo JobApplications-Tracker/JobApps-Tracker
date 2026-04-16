@@ -7,25 +7,26 @@
             fx:controller="gui.NewApplicationController"
             styleClass="form-page">
     <VBox styleClass="form-container">
-        <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+        <padding><Insets top="28" right="36" bottom="28" left="36"/></padding>
 
         <Label text="Pages / New Application" styleClass="breadcrumb"/>
         <Label text="New Application" styleClass="page-title"/>
+        <Region prefHeight="8"/>
 
-        <VBox styleClass="card" spacing="14">
+        <VBox styleClass="card" spacing="16">
 
-            <GridPane hgap="16" vgap="14">
+            <GridPane hgap="18" vgap="16">
                 <columnConstraints>
                     <ColumnConstraints minWidth="130"/>
                     <ColumnConstraints hgrow="ALWAYS"/>
                 </columnConstraints>
 
                 <Label text="Company *"  styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="companyField" styleClass="form-field"
+                <TextField fx:id="companyField" promptText="e.g. Google" styleClass="form-field"
                            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                 <Label text="Role *"     styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <TextField fx:id="roleField" styleClass="form-field"
+                <TextField fx:id="roleField" promptText="e.g. Software Engineer" styleClass="form-field"
                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                 <Label text="Status *"   styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
@@ -44,9 +45,9 @@
 
             <Label fx:id="errorLabel" styleClass="error-label"/>
 
-            <HBox spacing="12" alignment="CENTER_RIGHT">
-                <Button text="Cancel"           styleClass="secondary-button" onAction="#handleCancel"/>
-                <Button text="Save Application" styleClass="primary-button"   onAction="#handleSubmit"/>
+            <HBox spacing="14" alignment="CENTER_RIGHT">
+                <Button text="Cancel"             styleClass="secondary-button" onAction="#handleCancel"/>
+                <Button text="Save Application"   styleClass="primary-button"   onAction="#handleSubmit"/>
             </HBox>
 
         </VBox>

@@ -389,7 +389,9 @@ public class FileStorage implements Storage {
         }
         try {
             LocalDateTime date = LocalDateTime.parse(this.unescape(p[3]));
-            return new Interview(this.unescape(p[0]), this.unescape(p[1]), Integer.parseInt(p[2]), date, this.unescape(p[4]));
+            return new Interview(
+                    this.unescape(p[0]), this.unescape(p[1]),
+                    Integer.parseInt(p[2]), date, this.unescape(p[4]));
         } catch (DateTimeParseException | IllegalArgumentException e) {
             return null;
         }

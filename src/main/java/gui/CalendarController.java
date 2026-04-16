@@ -187,9 +187,9 @@ public class CalendarController {
                 cell.setMinHeight(CELL_MIN_HEIGHT);
 
                 int cellIndex = row * CALENDAR_COLS + col;
-                boolean inMonth = cellIndex >= startOffset && day <= daysInMonth;
+                boolean isInMonth = cellIndex >= startOffset && day <= daysInMonth;
 
-                if (inMonth) {
+                if (isInMonth) {
                     LocalDate cellDate = currentMonth.atDay(day);
                     boolean isToday = cellDate.equals(today);
 

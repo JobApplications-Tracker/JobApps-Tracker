@@ -1,6 +1,7 @@
 package logic;
 
 import storage.Storage;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,6 +106,34 @@ public class ApplicationController {
         }
 
         app.setStatus(newStatus);
+        this.storage.updateApplication(app);
+        return app;
+    }
+
+    /**
+     * Updates the deadline of an existing application.
+     *
+     * @param id       The ID of the application to update.
+     * @param deadline The new deadline date, or null to clear it.
+     * @return The updated Application object.
+     */
+    public Application updateDeadline(String id, LocalDate deadline) {
+        Application app = this.getApplicationById(id);
+        app.setDeadline(deadline);
+        this.storage.updateApplication(app);
+        return app;
+    }
+
+    /**
+     * Updates the notes of an existing application.
+     *
+     * @param id    The ID of the application to update.
+     * @param notes The new notes text.
+     * @return The updated Application object.
+     */
+    public Application updateNotes(String id, String notes) {
+        Application app = this.getApplicationById(id);
+        app.setNotes(notes != null ? notes : "");
         this.storage.updateApplication(app);
         return app;
     }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gui.EditApplicationController"
+            styleClass="form-page">
+    <VBox styleClass="form-container">
+        <padding><Insets top="28" right="36" bottom="28" left="36"/></padding>
+
+        <Label text="Pages / Dashboard / Edit Application" styleClass="breadcrumb"/>
+        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 4 0 8 0;">
+            <Label fx:id="pageTitleLabel" text="Edit Application" styleClass="page-title" HBox.hgrow="ALWAYS"/>
+            <Button text="Back to Dashboard" styleClass="secondary-button" onAction="#handleBack"/>
+        </HBox>
+
+        <!-- Read-only details card -->
+        <VBox styleClass="card" spacing="10">
+            <Label text="Application Details" styleClass="section-title"/>
+            <GridPane hgap="18" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="110"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="Company"    styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <Label fx:id="companyLabel"  style="-fx-text-fill: #2d2f3e;" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Role"       styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <Label fx:id="roleLabel"     style="-fx-text-fill: #2d2f3e;" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Pay"        styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <Label fx:id="payLabel"      style="-fx-text-fill: #2d2f3e;" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Location"   styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <Label fx:id="locationLabel" style="-fx-text-fill: #2d2f3e;" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Applied On" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <Label fx:id="dateAppliedLabel" style="-fx-text-fill: #2d2f3e;" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+        </VBox>
+
+        <Region prefHeight="4"/>
+
+        <!-- Editable fields card -->
+        <VBox styleClass="card" spacing="14">
+            <Label text="Update Application" styleClass="section-title"/>
+
+            <GridPane hgap="18" vgap="14">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="110"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="Status"   styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <ChoiceBox fx:id="statusChoice" maxWidth="200" styleClass="choice-box"/>
+                    <Label fx:id="currentStatusLabel" styleClass="hint-label"/>
+                </HBox>
+
+                <Label text="Deadline"  styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                    <DatePicker fx:id="deadlinePicker" maxWidth="200" styleClass="form-field"/>
+                    <Button text="Clear" styleClass="secondary-button" onAction="#handleClearDeadline"
+                            style="-fx-padding: 6 14;"/>
+                </HBox>
+
+                <Label text="Notes"     styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextArea fx:id="notesArea" styleClass="form-field"
+                          prefRowCount="4" wrapText="true"
+                          promptText="Add any notes about this application…"
+                          GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <Label fx:id="feedbackLabel" styleClass="hint-label"/>
+
+            <HBox spacing="14" alignment="CENTER_LEFT">
+                <Button text="Save Changes" styleClass="primary-button" onAction="#handleSave"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="deleteButton" text="Delete Application" styleClass="secondary-button"
+                        onAction="#handleDelete"
+                        style="-fx-text-fill: #d45b5b; -fx-border-color: #fde8e8;"/>
+            </HBox>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

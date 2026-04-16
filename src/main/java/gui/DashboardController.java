@@ -13,12 +13,16 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import logic.Application;
 import logic.ApplicationController;
 import logic.ApplicationStatus;
+
+import java.util.function.Consumer;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,10 +33,14 @@ import java.util.List;
  */
 public class DashboardController {
 
-    private static final String STYLE_STATUS_OFFER        = "status-offer";
-    private static final String STYLE_STATUS_INTERVIEWING = "status-interviewing";
-    private static final String STYLE_STATUS_REJECTED     = "status-rejected";
-    private static final String STYLE_STATUS_DEFAULT      = "status-default";
+    private static final String STYLE_STATUS_PILL          = "status-pill";
+    private static final String STYLE_STATUS_APPLIED       = "status-applied";
+    private static final String STYLE_STATUS_INTERVIEWING  = "status-interviewing";
+    private static final String STYLE_STATUS_OFFER         = "status-offer";
+    private static final String STYLE_STATUS_ACCEPTED      = "status-accepted";
+    private static final String STYLE_STATUS_REJECTED      = "status-rejected";
+    private static final String STYLE_STATUS_WITHDRAWN     = "status-withdrawn";
+    private static final String STYLE_STATUS_DEFAULT       = "status-default";
 
     @FXML private Label statTotal;
     @FXML private Label statApplied;
@@ -55,6 +63,7 @@ public class DashboardController {
 
     private ApplicationController appController;
     private Runnable onNewApplication;
+    private Consumer<Application> onEditApplication;
 
     /**
      * Sets the ApplicationController used to load and manage applications.
@@ -74,6 +83,15 @@ public class DashboardController {
      */
     public void setOnNewApplication(Runnable onNewApplication) {
         this.onNewApplication = onNewApplication;
+    }
+
+    /**
+     * Registers a callback invoked when the user double-clicks a row to edit an application.
+     *
+     * @param onEditApplication Consumer accepting the Application to edit.
+     */
+    public void setOnEditApplication(Consumer<Application> onEditApplication) {
+        this.onEditApplication = onEditApplication;
     }
 
     /**
@@ -132,26 +150,60 @@ public class DashboardController {
         });
 
         colStatus.setCellFactory(col -> new TableCell<>() {
+            private final Label pill = new Label();
+            {
+                pill.getStyleClass().add(STYLE_STATUS_PILL);
+            }
+
             @Override
             protected void updateItem(String value, boolean empty) {
                 super.updateItem(value, empty);
-                getStyleClass().removeAll(STYLE_STATUS_OFFER, STYLE_STATUS_INTERVIEWING,
-                        STYLE_STATUS_REJECTED, STYLE_STATUS_DEFAULT);
+                pill.getStyleClass().removeAll(
+                        STYLE_STATUS_APPLIED, STYLE_STATUS_INTERVIEWING,
+                        STYLE_STATUS_OFFER, STYLE_STATUS_ACCEPTED,
+                        STYLE_STATUS_REJECTED, STYLE_STATUS_WITHDRAWN,
+                        STYLE_STATUS_DEFAULT);
+
                 if (empty || value == null) {
                     setText(null);
+                    setGraphic(null);
                 } else {
-                    setText(value);
-                    if (value.equals(ApplicationStatus.OFFER.name())) {
-                        getStyleClass().add(STYLE_STATUS_OFFER);
-                    } else if (value.equals(ApplicationStatus.INTERVIEWING.name())) {
-                        getStyleClass().add(STYLE_STATUS_INTERVIEWING);
-                    } else if (value.equals(ApplicationStatus.REJECTED.name())) {
-                        getStyleClass().add(STYLE_STATUS_REJECTED);
-                    } else {
-                        getStyleClass().add(STYLE_STATUS_DEFAULT);
-                    }
+                    setText(null);
+                    pill.setText(value);
+                    pill.getStyleClass().add(getStatusStyle(value));
+                    setGraphic(pill);
                 }
             }
+
+            private String getStatusStyle(String status) {
+                if (status.equals(ApplicationStatus.APPLIED.name())) {
+                    return STYLE_STATUS_APPLIED;
+                } else if (status.equals(ApplicationStatus.INTERVIEWING.name())) {
+                    return STYLE_STATUS_INTERVIEWING;
+                } else if (status.equals(ApplicationStatus.OFFER.name())) {
+                    return STYLE_STATUS_OFFER;
+                } else if (status.equals(ApplicationStatus.ACCEPTED.name())) {
+                    return STYLE_STATUS_ACCEPTED;
+                } else if (status.equals(ApplicationStatus.REJECTED.name())) {
+                    return STYLE_STATUS_REJECTED;
+                } else if (status.equals(ApplicationStatus.WITHDRAWN.name())) {
+                    return STYLE_STATUS_WITHDRAWN;
+                }
+                return STYLE_STATUS_DEFAULT;
+            }
+        });
+
+        applicationTable.setRowFactory(tv -> {
+            TableRow<Application> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 2
+                        && !row.isEmpty()
+                        && onEditApplication != null) {
+                    onEditApplication.accept(row.getItem());
+                }
+            });
+            return row;
         });
 
         filteredList = new FilteredList<>(masterList, p -> true);

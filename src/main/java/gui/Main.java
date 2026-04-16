@@ -24,12 +24,14 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             BorderPane ap = fxmlLoader.load();
-            Scene scene = new Scene(ap, 1050, 680);
+            Scene scene = new Scene(ap, 1100, 720);
             scene.getStylesheets().add(
                     Main.class.getResource("/view/styles.css").toExternalForm()
             );
             stage.setScene(scene);
             stage.setTitle("Job Application Tracker");
+            stage.setMinWidth(900);
+            stage.setMinHeight(600);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
