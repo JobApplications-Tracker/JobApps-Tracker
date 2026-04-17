@@ -22,6 +22,7 @@ import javafx.scene.input.MouseButton;
 import logic.Application;
 import logic.ApplicationController;
 import logic.ApplicationStatus;
+import storage.StorageException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,14 +34,14 @@ import java.util.function.Consumer;
  */
 public class DashboardController {
 
-    private static final String STYLE_STATUS_PILL          = "status-pill";
-    private static final String STYLE_STATUS_APPLIED       = "status-applied";
-    private static final String STYLE_STATUS_INTERVIEWING  = "status-interviewing";
-    private static final String STYLE_STATUS_OFFER         = "status-offer";
-    private static final String STYLE_STATUS_ACCEPTED      = "status-accepted";
-    private static final String STYLE_STATUS_REJECTED      = "status-rejected";
-    private static final String STYLE_STATUS_WITHDRAWN     = "status-withdrawn";
-    private static final String STYLE_STATUS_DEFAULT       = "status-default";
+    private static final String STYLE_STATUS_PILL         = "status-pill";
+    private static final String STYLE_STATUS_APPLIED      = "status-applied";
+    private static final String STYLE_STATUS_INTERVIEWING = "status-interviewing";
+    private static final String STYLE_STATUS_OFFER        = "status-offer";
+    private static final String STYLE_STATUS_ACCEPTED     = "status-accepted";
+    private static final String STYLE_STATUS_REJECTED     = "status-rejected";
+    private static final String STYLE_STATUS_WITHDRAWN    = "status-withdrawn";
+    private static final String STYLE_STATUS_DEFAULT      = "status-default";
 
     @FXML private Label statTotal;
     @FXML private Label statApplied;
@@ -107,13 +108,13 @@ public class DashboardController {
     /**
      * Loads and displays application data after dependencies have been injected.
      * Called by MainController immediately after setAppController.
-     * Displays an error dialog if the logic layer throws an unexpected exception.
+     * Displays an error dialog if the storage layer throws a StorageException.
      */
     public void loadData() {
         List<Application> apps;
         try {
             apps = appController.getAllApplications();
-        } catch (RuntimeException e) {
+        } catch (StorageException e) {
             GuiUtils.showError("Could Not Load Applications", e.getMessage());
             return;
         }
@@ -138,6 +139,22 @@ public class DashboardController {
         String lowerKeyword = keyword.toLowerCase();
         return app.getCompanyName().toLowerCase().contains(lowerKeyword)
                 || app.getRoleTitle().toLowerCase().contains(lowerKeyword);
+    }
+
+    /**
+     * Maps an application status name to its corresponding CSS style class for the status pill.
+     *
+     * @param status The {@link ApplicationStatus} name (as returned by {@code name()}).
+     * @return The CSS class string to apply to the status pill label.
+     */
+    private static String getStatusStyle(String status) {
+        if (status.equals(ApplicationStatus.APPLIED.name()))       return STYLE_STATUS_APPLIED;
+        if (status.equals(ApplicationStatus.INTERVIEWING.name()))  return STYLE_STATUS_INTERVIEWING;
+        if (status.equals(ApplicationStatus.OFFER.name()))         return STYLE_STATUS_OFFER;
+        if (status.equals(ApplicationStatus.ACCEPTED.name()))      return STYLE_STATUS_ACCEPTED;
+        if (status.equals(ApplicationStatus.REJECTED.name()))      return STYLE_STATUS_REJECTED;
+        if (status.equals(ApplicationStatus.WITHDRAWN.name()))     return STYLE_STATUS_WITHDRAWN;
+        return STYLE_STATUS_DEFAULT;
     }
 
     private void setupTable() {
@@ -176,23 +193,6 @@ public class DashboardController {
                     pill.getStyleClass().add(getStatusStyle(value));
                     setGraphic(pill);
                 }
-            }
-
-            private String getStatusStyle(String status) {
-                if (status.equals(ApplicationStatus.APPLIED.name())) {
-                    return STYLE_STATUS_APPLIED;
-                } else if (status.equals(ApplicationStatus.INTERVIEWING.name())) {
-                    return STYLE_STATUS_INTERVIEWING;
-                } else if (status.equals(ApplicationStatus.OFFER.name())) {
-                    return STYLE_STATUS_OFFER;
-                } else if (status.equals(ApplicationStatus.ACCEPTED.name())) {
-                    return STYLE_STATUS_ACCEPTED;
-                } else if (status.equals(ApplicationStatus.REJECTED.name())) {
-                    return STYLE_STATUS_REJECTED;
-                } else if (status.equals(ApplicationStatus.WITHDRAWN.name())) {
-                    return STYLE_STATUS_WITHDRAWN;
-                }
-                return STYLE_STATUS_DEFAULT;
             }
         });
 

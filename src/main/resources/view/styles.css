@@ -254,8 +254,30 @@
     -fx-font-weight: bold;
 }
 
-.error-label  { -fx-text-fill: #e55b5b; -fx-font-size: 12px; }
-.hint-label   { -fx-text-fill: #a0a4be; -fx-font-size: 12px; }
+.error-label    { -fx-text-fill: #e55b5b; -fx-font-size: 12px; }
+.hint-label     { -fx-text-fill: #a0a4be; -fx-font-size: 12px; }
+
+/* ── Feedback Labels (used in EditApplicationController) ───── */
+.feedback-error   { -fx-text-fill: #d45b5b; -fx-font-size: 12px; }
+.feedback-success { -fx-text-fill: #3ea87a; -fx-font-size: 12px; }
+.feedback-neutral { -fx-text-fill: #a0a4be; -fx-font-size: 12px; }
+
+/* ── Delete Button (destructive action, combined with secondary-button) */
+.delete-button {
+    -fx-text-fill: #d45b5b;
+    -fx-border-color: #fde8e8;
+}
+
+.delete-button:hover {
+    -fx-text-fill: #c04040;
+    -fx-border-color: #f9d0d0;
+}
+
+/* ── Form Value (read-only label values in edit/detail forms) ─ */
+.form-value {
+    -fx-text-fill: #2d2f3e;
+    -fx-font-size: 13px;
+}
 
 /* ── Table ─────────────────────────────────────────────────── */
 .table-view {
@@ -480,7 +502,10 @@
 .list-cell:hover    { -fx-background-color: #f4f3ff; }
 .list-cell:selected { -fx-background-color: #eeebff; -fx-text-fill: #7c5cfc; }
 
-.row-best-pay { -fx-background-color: #e4f5ee; }
+.row-best-pay,
+.table-row-cell.row-best-pay,
+.table-row-cell.row-best-pay:odd,
+.table-row-cell.row-best-pay:even { -fx-background-color: #e4f5ee; }
 
 /* ── New Application Form ──────────────────────────────────── */
 .form-page      { -fx-background-color: #f5f6fa; }

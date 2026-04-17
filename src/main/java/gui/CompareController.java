@@ -14,6 +14,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import logic.Application;
 import logic.ApplicationController;
+import storage.StorageException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -83,12 +84,12 @@ public class CompareController {
     /**
      * Loads application data after dependencies have been injected.
      * Called by MainController immediately after setAppController.
-     * Displays an error dialog if the logic layer throws an unexpected exception.
+     * Displays an error dialog if the storage layer throws a StorageException.
      */
     public void loadData() {
         try {
             loadApplications();
-        } catch (RuntimeException e) {
+        } catch (StorageException e) {
             GuiUtils.showError("Could Not Load Applications", e.getMessage());
             return;
         }
@@ -136,14 +137,11 @@ public class CompareController {
             protected void updateItem(Application app, boolean empty) {
                 super.updateItem(app, empty);
                 getStyleClass().remove(STYLE_ROW_BEST_PAY);
-                if (!empty && app != null) {
-                    boolean isTop = !selectedApps.isEmpty()
-                            && selectedApps.stream()
+                if (!empty && app != null && !selectedApps.isEmpty()) {
+                    Application topPayer = selectedApps.stream()
                             .max(Comparator.comparingDouble(Application::getPay))
-                            .filter(a -> a.getId().equals(app.getId()))
-                            .isPresent()
-                            && app.getPay() > 0;
-                    if (isTop) {
+                            .orElse(null);
+                    if (topPayer != null && topPayer.getId().equals(app.getId())) {
                         getStyleClass().add(STYLE_ROW_BEST_PAY);
                     }
                 }
@@ -184,7 +182,7 @@ public class CompareController {
             List<Application> compared = appController.compareApplications(ids);
             selectedApps.setAll(compared);
             compareTable.refresh();
-        } catch (RuntimeException e) {
+        } catch (StorageException e) {
             GuiUtils.showError("Could Not Compare Applications", e.getMessage());
         }
     }

@@ -147,5 +147,5 @@ Each file stores one record per line with fields separated by `|`. Pipe characte
 ## Documentation
 
 Comprehensive project documentation is available in the `docs/` directory:
-* [**User Guide (UG)**](docs/UserGuide.md) - Instructions for end-users on navigating the dashboard, calendar, and comparison tools.
+* [**User Guide (UG)**](docs/userGuide.md) - Instructions for end-users on navigating the dashboard, calendar, and comparison tools.
 * [**Developer Guide (DG)**](docs/DeveloperGuide.md) - Full API documentation, system architecture, UML class diagrams, and sequence diagrams for future contributors.
