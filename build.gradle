@@ -5,7 +5,7 @@ plugins {
 }
 
 group   = 'com.jobtracker'
-version = '1.0'
+version = '1.6'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -28,6 +28,18 @@ application {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testRuntimeOnly    'org.junit.platform:junit-platform-launcher'
+
+    implementation "org.openjfx:javafx-controls:21:win"
+    implementation "org.openjfx:javafx-controls:21:linux"
+    implementation "org.openjfx:javafx-controls:21:mac-aarch64"
+
+    implementation "org.openjfx:javafx-graphics:21:win"
+    implementation "org.openjfx:javafx-graphics:21:linux"
+    implementation "org.openjfx:javafx-graphics:21:mac-aarch64"
+
+    implementation "org.openjfx:javafx-fxml:21:win"
+    implementation "org.openjfx:javafx-fxml:21:linux"
+    implementation "org.openjfx:javafx-fxml:21:mac-aarch64"
 }
 
 test {
@@ -35,14 +47,17 @@ test {
 }
 
 jar {
+    archiveBaseName = 'jobtracker'
     manifest {
         attributes 'Main-Class': 'gui.Launcher'
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    dependsOn configurations.runtimeClasspath
     from {
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
+        configurations.runtimeClasspath.resolvedConfiguration
+                .resolvedArtifacts
+                .collect { it.file }
+                .collect { it.isDirectory() ? it : zipTree(it) }
     }
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }

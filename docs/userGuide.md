@@ -27,20 +27,13 @@ JobApps Tracker is a desktop application for managing and tracking your internsh
 
 ## Getting Started
 
-- Ensure **Java 17** is installed on your computer. To simplify setup, we recommend using **Azul Zulu JDK 17 FX**, which bundles JavaFX. Download it [here](https://www.azul.com/downloads/?version=java-17-lts&package=jdk-fx#zulu).
-- Download `jobapps-tracker.jar` from [here](https://github.com/JobApplications-Tracker/JobApps-Tracker/releases).
+- Ensure **Java 21** is installed on your computer. 
 - Open your terminal.
 - Navigate to the folder containing `jobapps-tracker.jar`.
 - Run the command:
 
 ```
-java -jar jobapps-tracker.jar
-```
-
-If the app fails to launch, your system may require the JavaFX module path to be specified explicitly. If your JavaFX SDK is stored at `C:\javafx-sdk-21.0.7`, run:
-
-```
-java --module-path C:\javafx-sdk-21.0.7\lib --add-modules javafx.controls,javafx.fxml -jar jobapps-tracker.jar
+java -jar jobtracker-1.6.jar
 ```
 
 > **Minimum window size:** 900 × 600. Resize if any content appears clipped.
