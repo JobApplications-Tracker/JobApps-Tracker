@@ -212,6 +212,10 @@ f3a9b2c1-...|Meta|PM Intern|8500.0|Remote|OFFER|2026-01-20|2026-04-28|Referred b
 
 Field order: `id | companyName | roleTitle | pay | location | status | dateApplied | deadline | notes`
 
+This is an example of the object diagram for two sample applications.
+
+![Object Diagram](docs/images/objectDiagrams/objectDiagram.png)
+
 ---
 
 ## Testing
