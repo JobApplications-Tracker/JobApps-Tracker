@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import logic.Application;
 import logic.ApplicationController;
 import logic.ApplicationStatus;
+import storage.StorageException;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -130,7 +131,7 @@ public class EditApplicationController {
             // Status transition error — revert the choice box to the last known valid state
             statusChoice.setValue(application.getStatus());
             setFeedback(e.getMessage(), FEEDBACK_ERROR);
-        } catch (RuntimeException e) {
+        } catch (StorageException e) {
             setFeedback(e.getMessage(), FEEDBACK_ERROR);
         }
     }
@@ -178,8 +179,7 @@ public class EditApplicationController {
      * Saves the deadline field if it has been changed or cleared since the view was loaded.
      *
      * @return {@code true} if a change was detected and persisted, {@code false} otherwise.
-     * @throws RuntimeException wrapping the underlying storage error, prefixed with a
-     *                          user-facing message.
+     * @throws StorageException if the underlying storage layer fails to persist the change.
      */
     private boolean saveDeadline() {
         LocalDate newDeadline     = deadlinePicker.getValue();
@@ -190,8 +190,8 @@ public class EditApplicationController {
 
         try {
             appController.updateDeadline(application.getId(), newDeadline);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Failed to update deadline: " + e.getMessage(), e);
+        } catch (StorageException e) {
+            throw new StorageException("Failed to update deadline: " + e.getMessage(), e);
         }
         return true;
     }
@@ -200,8 +200,7 @@ public class EditApplicationController {
      * Saves the notes field if the text has been modified since the view was loaded.
      *
      * @return {@code true} if a change was detected and persisted, {@code false} otherwise.
-     * @throws RuntimeException wrapping the underlying storage error, prefixed with a
-     *                          user-facing message.
+     * @throws StorageException if the underlying storage layer fails to persist the change.
      */
     private boolean saveNotes() {
         String newNotes     = notesArea.getText().trim();
@@ -210,8 +209,8 @@ public class EditApplicationController {
 
         try {
             appController.updateNotes(application.getId(), newNotes);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Failed to update notes: " + e.getMessage(), e);
+        } catch (StorageException e) {
+            throw new StorageException("Failed to update notes: " + e.getMessage(), e);
         }
         return true;
     }
@@ -290,7 +289,7 @@ public class EditApplicationController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 appController.deleteApplication(application.getId());
-            } catch (RuntimeException e) {
+            } catch (StorageException e) {
                 GuiUtils.showError("Could Not Delete", e.getMessage());
                 return;
             }
