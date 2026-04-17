@@ -9,6 +9,7 @@ import logic.Application;
 import logic.ApplicationController;
 import logic.InterviewController;
 import logic.ReminderService;
+import storage.StorageException;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -91,12 +92,12 @@ public class CalendarController {
     /**
      * Loads event data and renders the calendar grid.
      * Called by MainController immediately after all dependencies have been injected.
-     * Displays an error dialog if the logic layer throws an unexpected exception.
+     * Displays an error dialog if the storage layer throws a StorageException.
      */
     public void loadData() {
         try {
             loadEvents();
-        } catch (RuntimeException e) {
+        } catch (StorageException e) {
             GuiUtils.showError("Could Not Load Calendar Data", e.getMessage());
             eventMap = new HashMap<>();
         }

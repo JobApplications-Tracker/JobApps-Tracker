@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import logic.ApplicationController;
 import logic.ApplicationStatus;
+import storage.StorageException;
 
 /**
  * Controls the new application form view.
@@ -91,7 +92,7 @@ public class NewApplicationController {
     /**
      * Validates required fields and saves the new application via ApplicationController.
      * Deadline and notes can be set later via an edit screen.
-     * Displays an error dialog if the logic layer rejects the input.
+     * Displays an error dialog if the storage layer rejects the input.
      */
     @FXML
     private void handleSubmit() {
@@ -120,7 +121,7 @@ public class NewApplicationController {
 
         try {
             appController.addApplication(company, role, pay, location, status);
-        } catch (RuntimeException e) {
+        } catch (StorageException e) {
             GuiUtils.showError("Could Not Save Application", e.getMessage());
             return;
         }

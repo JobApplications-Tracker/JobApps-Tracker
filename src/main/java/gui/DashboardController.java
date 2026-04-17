@@ -22,6 +22,7 @@ import javafx.scene.input.MouseButton;
 import logic.Application;
 import logic.ApplicationController;
 import logic.ApplicationStatus;
+import storage.StorageException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -107,13 +108,13 @@ public class DashboardController {
     /**
      * Loads and displays application data after dependencies have been injected.
      * Called by MainController immediately after setAppController.
-     * Displays an error dialog if the logic layer throws an unexpected exception.
+     * Displays an error dialog if the storage layer throws a StorageException.
      */
     public void loadData() {
         List<Application> apps;
         try {
             apps = appController.getAllApplications();
-        } catch (RuntimeException e) {
+        } catch (StorageException e) {
             GuiUtils.showError("Could Not Load Applications", e.getMessage());
             return;
         }
